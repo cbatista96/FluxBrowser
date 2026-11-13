@@ -31,7 +31,14 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         bool firstRun = !File.Exists(Path.Combine(ProfileStorage.DirectoryPath, "settings.json"));
-        try { BrowserPreferences loaded = ProfileStorage.Read("settings.json", new BrowserPreferences()); loaded.Validate(); Preferences = loaded; }
+        try
+        {
+            BrowserPreferences loaded = ProfileStorage.Read("settings.json", new BrowserPreferences());
+            loaded.Validate();
+            bool downloadDirectoryChanged = loaded.UpgradeDownloadDirectory();
+            Preferences = loaded;
+            if (downloadDirectoryChanged) ProfileStorage.WriteDeferred("settings.json", loaded);
+        }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or System.Text.Json.JsonException or InvalidDataException)
         { ProfileError = $"No se cargaron los ajustes; no se sobrescribirá el archivo hasta que guardes ajustes válidos. {e.Message}"; }
         if (firstRun && WebEngine.UseWebView2) Preferences = Preferences with { PersistSessions = true }; // sandboxed engine: staying signed in is safe

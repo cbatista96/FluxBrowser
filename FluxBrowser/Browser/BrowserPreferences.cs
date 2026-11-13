@@ -46,8 +46,17 @@ internal sealed record BrowserPreferences
     public double DefaultZoom { get; set; } = 1;
     public bool RestoreSession { get; set; } = true;
     public bool RememberHistory { get; set; } = true;
-    public string DownloadDirectory { get; set; } = Path.Combine(
+    public string DownloadDirectory { get; set; } = DefaultDownloadDirectory;
+    internal static string DefaultDownloadDirectory => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", "FluxBrowser");
+
+    internal bool UpgradeDownloadDirectory()
+    {
+        string legacy = Path.Combine(Path.GetDirectoryName(DefaultDownloadDirectory)!, "MyOwnBrowser");
+        if (!string.Equals(DownloadDirectory, legacy, StringComparison.OrdinalIgnoreCase)) return false;
+        DownloadDirectory = DefaultDownloadDirectory;
+        return true;
+    }
 
     public void Validate()
     {
