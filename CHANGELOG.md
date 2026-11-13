@@ -41,7 +41,18 @@ Cambios de Flux Browser por versión. Cada versión enlaza a sus descargas publi
 - Unifica el nombre Flux Browser en el menú de ayuda, Acerca de, diagnóstico, rutas de Windows, registro del navegador, código y empaquetado.
 - Traslada el perfil anterior al directorio de Flux Browser si aún no existe uno nuevo. Conserva las carpetas de descargas que el usuario eligió.
 
+### Capturas
+
+![Ayuda y comentarios](docs/capturas/12-ayuda.png)
+![Acerca de Flux Browser](docs/capturas/11-acerca-de.png)
+
 ## [0.9.0] - 2026-11-13
+
+### Capturas
+
+![Nueva pestaña integrada](docs/capturas/01-nueva-pestana.png)
+![Panel de favoritos](docs/capturas/05-favoritos.png)
+![Pestañas verticales y tema oscuro](docs/capturas/09-vertical-oscuro.png)
 
 ### Distribución
 

@@ -22,7 +22,7 @@ $sections = foreach ($language in @(
     }
     $body = $match.Groups['body'].Value.Trim()
     $body = $body -replace '!\[([^\]]+)\]\((docs/capturas/[^)]+)\)', ('<img src="' + $raw + '$2" width="900" alt="$1">')
-    $body += "`n`n[$($language.File)]($repo/blob/v$Version/$($language.File))"
+    $body += "`n`n[$($language.File)]($repo/blob/main/$($language.File))"
     Set-Content -LiteralPath (Join-Path $artifacts "release-notes.$($language.Code).md") -Value $body -Encoding utf8
     "## $($language.Heading)`n`n$body"
 }

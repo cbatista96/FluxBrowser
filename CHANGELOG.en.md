@@ -41,6 +41,11 @@ All notable changes to Flux Browser. Entries link to the published downloads.
 - Standardized Flux Browser across Help, About, diagnostics, Windows paths and registration, source code and packaging. Added screenshots of Help and About.
 - Existing profiles move to the Flux Browser directory when a new profile does not already exist. The old default download path is upgraded and custom paths are preserved.
 
+### Screenshots
+
+![Help and feedback](docs/capturas/12-ayuda.png)
+![About Flux Browser](docs/capturas/11-acerca-de.png)
+
 ## [0.9.0] - 2026-11-13
 
 ### Highlights
@@ -48,6 +53,12 @@ All notable changes to Flux Browser. Entries link to the published downloads.
 - First technical preview of Flux Browser by World Marketing Labs, with live glass bars, horizontal and vertical tabs, and WebView2 as the default engine.
 - A per-user EXE installer, portable ZIP, SHA-256 checksums, screenshot gallery, privacy policy, issue form and publication documentation.
 - An x64 MSIX preview with WebView2 and Windows HTTP/HTTPS activation.
+
+### Screenshots
+
+![Built-in new tab](docs/capturas/01-nueva-pestana.png)
+![Bookmarks panel](docs/capturas/05-favoritos.png)
+![Vertical tabs and dark theme](docs/capturas/09-vertical-oscuro.png)
 
 ### Added
 
