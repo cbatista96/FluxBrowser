@@ -324,24 +324,26 @@ public sealed partial class MainWindow : Window
         if (args.Key == VirtualKey.Enter)
         {
             args.Handled = true;
-            if (!AcceptSuggestion()) { HideSuggestions(); NavigateAddress(); }
+            if (!AcceptSuggestion()) { HideSuggestions(); NavigateInput(AddressBox.Text); }
         }
     }
 
     private void GoButton_Click(object sender, RoutedEventArgs args) => NavigateCurrent(Preferences.HomePage);
 
-    private void NavigateAddress()
+    private bool NavigateInput(string text)
     {
-        if (ViewportLayout.IsInternal(AddressBox.Text.Trim())) { NavigateCurrent(AddressBox.Text.Trim()); return; }
-        if (AddressBox.Text.Trim() == "browser:diagnostics") { NavigateCurrent(_testPage); return; }
-        if (!AddressResolver.TryResolve(AddressBox.Text, out string address, out string error, Preferences.SearchEngine))
+        text = text.Trim();
+        if (ViewportLayout.IsInternal(text)) { NavigateCurrent(text); return true; }
+        if (text == "browser:diagnostics") { NavigateCurrent(_testPage); return true; }
+        if (!AddressResolver.TryResolve(text, out string address, out string error, Preferences.SearchEngine))
         {
             ShowError("Dirección no válida", error);
-            return;
+            return false;
         }
 
         NavigateCurrent(address);
         FocusPage();
+        return true;
     }
 
     private void BackButton_Click(object sender, RoutedEventArgs args) => _web?.Back();

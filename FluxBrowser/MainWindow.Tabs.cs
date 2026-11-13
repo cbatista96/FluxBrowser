@@ -257,7 +257,8 @@ public sealed partial class MainWindow
             UpdateTabChrome(forceAddress: switchingTabs);
             ShowInternalPage(tab);
             RefreshZoom(tab);
-            if (WebInput.FocusState != FocusState.Unfocused) tab.Session.SetFocus(true);
+            if (!ViewportLayout.IsInternal(tab.Address) && WebInput.FocusState != FocusState.Unfocused)
+                tab.Session.SetFocus(true);
         }
         finally { _selectingTab = false; }
     }
@@ -282,7 +283,8 @@ public sealed partial class MainWindow
         BackButton.IsEnabled = tab.CanGoBack;
         ForwardButton.IsEnabled = tab.CanGoForward;
         ForwardButton.Visibility = tab.CanGoForward ? Visibility.Visible : Visibility.Collapsed;
-        ReloadButton.IsEnabled = AddressBox.IsEnabled = GoButton.IsEnabled = TestPageButton.IsEnabled = TestScrollButton.IsEnabled = tab.Ready;
+        AddressBox.IsEnabled = tab.Ready || ViewportLayout.IsInternal(tab.Address);
+        ReloadButton.IsEnabled = GoButton.IsEnabled = TestPageButton.IsEnabled = TestScrollButton.IsEnabled = tab.Ready;
         // The same icon element keeps its running animation; only the glyph changes.
         string reloadGlyph = tab.IsLoading ? "" : "";
         if (ReloadIcon.Glyph != reloadGlyph) ReloadIcon.Glyph = reloadGlyph;

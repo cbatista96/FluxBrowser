@@ -20,7 +20,8 @@ internal sealed class WebView2Session : IWebSession
 
     private readonly Panel _host;
     private readonly WebView2 _view = new() { Visibility = Visibility.Visible };
-    private readonly string _initialPage;
+    private string _initialPage;
+    private bool _ready;
     private readonly string _testPage;
     private readonly bool _isPrivate;
     private readonly Func<string> _downloadDirectory;
@@ -150,8 +151,9 @@ internal sealed class WebView2Session : IWebSession
             await InstallKeyChannelAsync(_core);
             if (_disposed) return;
             AppLog.Info($"WebView2 listo (privada={_isPrivate}, perfil privado del motor={_core.Profile.IsInPrivateModeEnabled}, perfil={_core.Profile.ProfileName})");
-            Ready?.Invoke();
+            _ready = true;
             _core.Navigate(_initialPage);
+            Ready?.Invoke();
         }
         catch (Exception exception)
         {
@@ -483,7 +485,11 @@ internal sealed class WebView2Session : IWebSession
 
     public void Navigate(string address)
     {
-        if (_core is null) return;
+        if (!_ready || _core is null)
+        {
+            _initialPage = address;
+            return;
+        }
         if (_core.IsSuspended) _core.Resume(); // a sleeping tab asked to go somewhere wakes up first
         _core.Navigate(address);
     }

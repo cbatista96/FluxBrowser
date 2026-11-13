@@ -15,7 +15,9 @@ internal sealed class BrowserSession : IWebSession
     private readonly CefRenderHandler _renderHandler;
     private readonly WindowInfo _windowInfo;
     private readonly BrowserSettings _browserSettings;
-    private readonly string _initialPage;
+    private readonly object _navigationGate = new();
+    private string _initialPage;
+    private bool _navigationReady;
     private readonly string _testPage;
     private readonly RequestContext? _privateContext;
     private readonly BrowserDownloadHandler _downloads;
@@ -159,7 +161,14 @@ internal sealed class BrowserSession : IWebSession
         _host?.WasResized();
     }
 
-    public void Navigate(string address) => _browser.LoadUrl(address);
+    public void Navigate(string address)
+    {
+        lock (_navigationGate)
+        {
+            if (_navigationReady) _browser.LoadUrl(address);
+            else _initialPage = address;
+        }
+    }
     public void ShowTestPage() => Navigate(_testPage);
     public void Back() => _browser.Back();
     public void Forward() => _browser.Forward();
@@ -236,7 +245,11 @@ internal sealed class BrowserSession : IWebSession
         _host.WindowlessFrameRate = _frameRate;
         _host.NotifyScreenInfoChanged();
         _host.WasResized();
-        _browser.LoadUrl(_initialPage);
+        lock (_navigationGate)
+        {
+            _browser.LoadUrl(_initialPage);
+            _navigationReady = true;
+        }
         Ready?.Invoke();
     }
 

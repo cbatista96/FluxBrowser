@@ -1,6 +1,6 @@
 # Fallos y limitaciones conocidos
 
-| Área | Estado en 0.9.1 |
+| Área | Estado en 0.9.2 |
 | --- | --- |
 | Zoom | El zoom CSS puede provocar desplazamiento horizontal en sitios con anchuras fijas o unidades `vw`. Ctrl+rueda no cambia el zoom. |
 | CEF | Respaldo experimental de la versión de GitHub. Funciona sin el sandbox de Chromium y necesita una GPU compatible. Usa WebView2 para navegación cotidiana. |

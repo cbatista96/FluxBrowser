@@ -54,6 +54,17 @@ public sealed partial class MainWindow
                     case "settings-page": NavigateSettings(value); break;
                     case "select": if (int.Parse(value) < _tabs.Count) SelectTab(_tabs[int.Parse(value)]); break;
                     case "newtab": TryAddTab(); break;
+                    case "newtab-input":
+                        if (NewTabPanel.Visibility != Visibility.Visible || NewTabSearch.FocusState == FocusState.Unfocused)
+                            throw new InvalidOperationException("La búsqueda de Nueva pestaña no tiene el foco.");
+                        NewTabSearch.Text = value;
+                        Diagnostics.AppLog.Info("Nueva pestaña: campo de búsqueda enfocado.");
+                        break;
+                    case "newtab-submit":
+                        if (!NavigateInput(NewTabSearch.Text))
+                            throw new InvalidOperationException("No se pudo enviar la entrada de Nueva pestaña.");
+                        NewTabSearch.Text = "";
+                        break;
                     case "go": NavigateCurrent(value); break;
                     case "mute": if (_activeTab is { } tab) ToggleMute(tab); break;
                     case "about": ShowAbout(); break;

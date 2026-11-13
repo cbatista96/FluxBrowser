@@ -1,11 +1,47 @@
 # Registro de cambios
 
-## 0.9.1 — vista previa técnica
+[English](CHANGELOG.en.md) · **Español**
+
+Cambios de Flux Browser por versión. Cada versión enlaza a sus descargas publicadas.
+
+## [Sin publicar]
+
+## [0.9.2] - 2026-11-13
+
+### Resumen
+
+- Escribe una búsqueda o dirección web inmediatamente al abrir la nueva pestaña integrada.
+- GitHub muestra las mismas funciones, capturas y notas de versión en inglés y español, con el inglés primero.
+
+### Añadido
+
+- Páginas del proyecto en inglés y español, con la galería completa en cada una, notas de versión equivalentes y documentación de soporte.
+
+### Capturas
+
+![Nueva pestaña integrada](docs/capturas/01-nueva-pestana.png)
+![Buscar en la página](docs/capturas/03-busqueda.png)
+![Pestañas verticales y tema oscuro](docs/capturas/09-vertical-oscuro.png)
+
+### Cambiado
+
+- La barra de direcciones y el buscador de nueva pestaña comparten el procesamiento de búsquedas y direcciones web.
+- La barra de direcciones está disponible en páginas internas mientras Chromium se inicializa.
+
+### Arreglado
+
+- La nueva pestaña recibe el foco en cuanto su buscador está listo. El motor web oculto ya no puede quitárselo.
+- Las entradas inválidas permanecen en el buscador de nueva pestaña para que puedas corregirlas.
+- Las búsquedas y direcciones enviadas durante el arranque del motor se conservan y se cargan cuando está listo.
+
+## [0.9.1] - 2026-11-13
+
+### Cambiado
 
 - Unifica el nombre Flux Browser en el menú de ayuda, Acerca de, diagnóstico, rutas de Windows, registro del navegador, código y empaquetado.
 - Traslada el perfil anterior al directorio de Flux Browser si aún no existe uno nuevo. Conserva las carpetas de descargas que el usuario eligió.
 
-## 0.9.0 — vista previa técnica
+## [0.9.0] - 2026-11-13
 
 ### Distribución
 
@@ -125,3 +161,8 @@
 - `tools\publish.ps1`: pruebas, publicación autocontenida, prueba de humo, zip y SHA-256.
 - Pruebas para línea de comandos, filtrado de hosts privados y almacenamiento diferido (ahora en xUnit).
 - `.editorconfig`, `.gitignore` ampliado, versión en «Acerca de».
+
+[Sin publicar]: https://github.com/cbatista96/FluxBrowser/compare/v0.9.2...HEAD
+[0.9.2]: https://github.com/cbatista96/FluxBrowser/releases/tag/v0.9.2
+[0.9.1]: https://github.com/cbatista96/FluxBrowser/releases/tag/v0.9.1
+[0.9.0]: https://github.com/cbatista96/FluxBrowser/releases/tag/v0.9.0

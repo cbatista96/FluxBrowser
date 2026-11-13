@@ -833,10 +833,8 @@ public sealed partial class MainWindow
     private void NewTabSearch_KeyDown(object sender, KeyRoutedEventArgs args)
     {
         if (args.Key != VirtualKey.Enter || string.IsNullOrWhiteSpace(NewTabSearch.Text)) return;
-        SetAddressText(NewTabSearch.Text);
-        NewTabSearch.Text = "";
-        NavigateAddress();
         args.Handled = true;
+        if (NavigateInput(NewTabSearch.Text)) NewTabSearch.Text = "";
     }
 
     private void BuildNewTab()

@@ -46,8 +46,9 @@ public sealed partial class MainWindow
             tab.Title = "Nueva pestaña";
             BuildNewTab();
             if (!newTabWasVisible) RevealNewTab();
-            // Typing on a fresh tab goes straight into its search box.
-            DispatcherQueue.TryEnqueue(() =>
+            // Focus before another keystroke can arrive. On first layout the text box
+            // may not yet be focusable, so retry once on the dispatcher.
+            if (!NewTabSearch.Focus(FocusState.Programmatic)) DispatcherQueue.TryEnqueue(() =>
             {
                 if (!_closing && _activeTab == tab && NewTabPanel.Visibility == Visibility.Visible) NewTabSearch.Focus(FocusState.Programmatic);
             });

@@ -1,0 +1,23 @@
+name: Report a bug
+description: Describe a reproducible problem in Flux Browser.
+title: "[Bug] "
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Flux Browser and Windows versions
+      description: Find the browser version under Help and feedback → About.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include what you expected and what happened. Say whether you installed the EXE or used the portable ZIP.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Screenshot or log excerpt
+      description: Remove private URLs, usernames and personal paths before attaching files.
