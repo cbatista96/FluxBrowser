@@ -1,0 +1,16 @@
+# Chromium (via CefSharp) ships security fixes every few weeks: a weekly update PR keeps the engine from going stale.
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directories:
+      - /MyOwnBrowser
+      - /MyOwnBrowser.Tests
+    schedule:
+      interval: weekly
+    groups:
+      cef:
+        patterns: ["CefSharp*", "chromiumembeddedframework*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

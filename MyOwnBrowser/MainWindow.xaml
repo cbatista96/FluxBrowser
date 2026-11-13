@@ -1,0 +1,364 @@
+<Window
+    x:Class="MyOwnBrowser.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:browser="using:MyOwnBrowser.Browser"
+    Title="My Own Browser">
+    <Grid x:Name="RootGrid" Background="Transparent" RequestedTheme="Default">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SidebarColumn" Width="0" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" /><RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="Sidebar" Visibility="Collapsed" Padding="6,40,6,6" RowSpacing="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button x:Name="VerticalNewTabButton" Click="NewTab_Click" IsEnabled="False" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch" Height="36" Padding="0" CornerRadius="4" Background="Transparent" BorderThickness="0"
+                    AutomationProperties.Name="Nueva pestaña">
+                <Grid ColumnSpacing="12" Padding="12,0,8,0">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="16" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                    <FontIcon x:Name="VerticalNewTabIcon" Glyph="&#xE710;" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="Nueva pestaña" FontSize="12" VerticalAlignment="Center" />
+                </Grid>
+            </Button>
+            <ListView x:Name="VerticalTabs" Grid.Row="1" SelectionChanged="VerticalTabs_SelectionChanged" Padding="0"
+                      Background="Transparent" SelectionMode="Single" ContainerContentChanging="VerticalTabs_ContainerContentChanging">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                        <Setter Property="MinHeight" Value="36" />
+                        <Setter Property="Height" Value="36" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="0,1" />
+                        <Setter Property="CornerRadius" Value="8" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnSpacing="10" Padding="12,0,6,0" Background="Transparent" ContextRequested="Tab_ContextRequested"
+                              ToolTipService.ToolTip="{Binding Title}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="16" /><ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="{Binding Glyph}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Visibility="{Binding GlyphVisibility}" />
+                            <Image Source="{Binding FaviconSource}" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Stretch="Uniform" Visibility="{Binding FaviconVisibility}" />
+                            <ProgressRing Width="14" Height="14" MinWidth="0" MinHeight="0" IsActive="{Binding IsLoading}" Visibility="{Binding LoadingVisibility}" />
+                            <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="12" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                            <!-- The close button only exists while the pointer is over the row, so the title gets the whole width. -->
+                            <Button x:Name="VerticalClose" Grid.Column="1" Click="CloseVerticalTab_Click" Tag="{Binding}" Visibility="{Binding CloseVisibility}"
+                                    Opacity="0" IsHitTestVisible="False" HorizontalAlignment="Right" Width="24" Height="24" MinWidth="0" MinHeight="0"
+                                    Background="#44808080" BorderThickness="0" Padding="0" CornerRadius="4" VerticalAlignment="Center"
+                                    AutomationProperties.Name="Cerrar pestaña">
+                                <FontIcon Glyph="&#xE711;" FontSize="10" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button x:Name="VerticalSettingsButton" Grid.Row="2" Click="Settings_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Height="36"
+                    Padding="0" CornerRadius="4" Background="Transparent" BorderThickness="0" AutomationProperties.Name="Configuración">
+                <Grid ColumnSpacing="12" Padding="12,0,8,0">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="16" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                    <FontIcon x:Name="VerticalSettingsIcon" Glyph="&#xE713;" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="Configuración" FontSize="12" VerticalAlignment="Center" />
+                </Grid>
+            </Button>
+        </Grid>
+        <Grid x:Name="PageGrid" Grid.Column="1">
+        <!-- Solid base for the bars; a page that starts below them (and the off-screen engine's surface) leaves it visible. -->
+        <Border x:Name="BarBase" Height="108" VerticalAlignment="Top" IsHitTestVisible="False" />
+        <SwapChainPanel x:Name="BrowserSurface" />
+        <Grid x:Name="WebHost" />
+        <browser:BrowserInput
+            x:Name="WebInput"
+            Background="Transparent"
+            IsTabStop="True"
+            AutomationProperties.Name="Contenido de la página web"
+            PointerPressed="WebInput_PointerPressed"
+            PointerReleased="WebInput_PointerReleased"
+            PointerMoved="WebInput_PointerMoved"
+            PointerExited="WebInput_PointerExited"
+            PointerWheelChanged="WebInput_PointerWheelChanged"
+            PreviewKeyDown="WebInput_PreviewKeyDown"
+            PreviewKeyUp="WebInput_PreviewKeyUp"
+            CharacterReceived="WebInput_CharacterReceived"
+            GotFocus="WebInput_GotFocus"
+            LostFocus="WebInput_LostFocus">
+            <Control.Template>
+                <ControlTemplate TargetType="browser:BrowserInput">
+                    <Border Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Control.Template>
+        </browser:BrowserInput>
+
+        <!-- The new-tab page fills the whole window, bars included: the image shows through the translucent bars exactly like a web page scrolled under them. -->
+        <Grid x:Name="NewTabPanel" RightTapped="NewTabPanel_RightTapped" ContextRequested="NewTabPanel_ContextRequested" Visibility="Collapsed" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Image x:Name="NewTabBackgroundImage" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0" />
+            <Border x:Name="NewTabScrim" Background="#33000000" Visibility="Collapsed" />
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+                <StackPanel x:Name="NewTabLayout" Spacing="22" MaxWidth="720" Margin="32,218,32,40" HorizontalAlignment="Center">
+                    <TextBlock x:Name="NewTabGreeting" Text="Hola, ¿qué quieres buscar?" FontSize="26" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                    <Grid x:Name="NewTabSearchHost" Height="48" CornerRadius="24" BorderThickness="1">
+                        <TextBox x:Name="NewTabSearch" PlaceholderText="Buscar en la web o escribir una dirección"
+                                 KeyDown="NewTabSearch_KeyDown" FontSize="14" Padding="48,12,20,10" CornerRadius="24"
+                                 BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center"
+                                 AutomationProperties.Name="Buscar en la web o escribir una dirección" />
+                        <FontIcon Glyph="&#xE721;" FontSize="16" Margin="18,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" IsHitTestVisible="False" />
+                    </Grid>
+                    <VariableSizedWrapGrid x:Name="QuickLinks" Orientation="Horizontal" ItemWidth="92" ItemHeight="92" HorizontalAlignment="Center" MaximumRowsOrColumns="8" />
+                </StackPanel>
+            </ScrollViewer>
+            <TextBlock x:Name="NewTabCredit" FontSize="11" Opacity="0.9" Margin="0,0,16,12" Foreground="White"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" MaxWidth="520" Visibility="Collapsed" />
+        </Grid>
+        <!-- Frosted glass behind the bars over XAML pages (a web page draws its own, see page-host.js). -->
+        <Border x:Name="InternalBarGlass" Height="108" VerticalAlignment="Top" IsHitTestVisible="False" Visibility="Collapsed" />
+        <!-- Transparent, not null: the strip's free space must stop the pointer instead of passing it to the page scrolled under it. -->
+        <Grid x:Name="TabStripHost" Height="36" Margin="0,0,138,0" VerticalAlignment="Top" Background="Transparent">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+            <Button x:Name="TabActionsButton" Click="TabActions_Click" Width="32" Height="28" Padding="0" Margin="4,4,2,4" CornerRadius="4"
+                    Background="Transparent" BorderThickness="0" AutomationProperties.Name="Opciones de pestañas"
+                    ToolTipService.ToolTip="Opciones de pestañas">
+                <FontIcon Glyph="&#xE70D;" FontSize="12" />
+            </Button>
+        </Grid>
+        <Grid x:Name="VerticalTitleBar" Height="36" Margin="0,0,138,0" VerticalAlignment="Top" Visibility="Collapsed" Background="Transparent">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+            <Button x:Name="VerticalTabActionsButton" Click="TabActions_Click" Width="32" Height="28" Padding="0" Margin="4,4,2,4" CornerRadius="4" Background="Transparent" BorderThickness="0"
+                    AutomationProperties.Name="Opciones de pestañas" ToolTipService.ToolTip="Opciones de pestañas">
+                <FontIcon Glyph="&#xE70D;" FontSize="12" />
+            </Button>
+            <TextBlock x:Name="VerticalWindowTitle" Grid.Column="1" FontSize="12" Margin="8,0" VerticalAlignment="Center"
+                       Text="Nueva pestaña" TextTrimming="CharacterEllipsis" IsHitTestVisible="False" />
+        </Grid>
+        <Grid x:Name="Chrome" Height="72" Margin="0,36,0,0" VerticalAlignment="Top" Background="#01FFFFFF">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="42" />
+                <RowDefinition x:Name="BookmarksRow" Height="30" />
+            </Grid.RowDefinitions>
+            <Grid x:Name="ToolbarRow" Margin="4,4,4,4" ColumnSpacing="2" SizeChanged="ToolbarRow_SizeChanged">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="BackButton" Grid.Column="0" Click="BackButton_Click" IsEnabled="False"
+                        ToolTipService.ToolTip="Atrás" AutomationProperties.Name="Atrás"
+                        Background="Transparent" BorderThickness="0" Width="36" Height="32" MinWidth="0" Padding="0" CornerRadius="4">
+                    <FontIcon Glyph="&#xE72B;" FontSize="16" />
+                </Button>
+                <Button x:Name="ForwardButton" Grid.Column="1" Click="ForwardButton_Click" IsEnabled="False"
+                        ToolTipService.ToolTip="Adelante" AutomationProperties.Name="Adelante"
+                        Background="Transparent" BorderThickness="0" Width="36" Height="32" MinWidth="0" Padding="0" CornerRadius="4">
+                    <FontIcon Glyph="&#xE72A;" FontSize="16" />
+                </Button>
+                <Button x:Name="ReloadButton" Grid.Column="2" Click="ReloadButton_Click" IsEnabled="False"
+                        ToolTipService.ToolTip="Actualizar (Ctrl+R)" AutomationProperties.Name="Actualizar"
+                        Background="Transparent" BorderThickness="0" Width="36" Height="32" MinWidth="0" Padding="0" CornerRadius="4">
+                    <FontIcon x:Name="ReloadIcon" Glyph="&#xE72C;" FontSize="16" />
+                </Button>
+                <Button x:Name="GoButton" Grid.Column="3" Click="GoButton_Click" IsEnabled="False"
+                        ToolTipService.ToolTip="Inicio (Alt+Inicio)" AutomationProperties.Name="Inicio"
+                        Background="Transparent" BorderThickness="0" Width="36" Height="32" MinWidth="0" Padding="0" CornerRadius="4">
+                    <FontIcon Glyph="&#xE80F;" FontSize="16" />
+                </Button>
+                <Grid x:Name="AddressHost" Grid.Column="4" Margin="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBox x:Name="AddressBox" KeyDown="AddressBox_KeyDown"
+                             GotFocus="AddressBox_FocusChanged" LostFocus="AddressBox_FocusChanged" TextChanged="AddressBox_TextChanged"
+                             PreviewKeyDown="AddressBox_PreviewKeyDown"
+                             PlaceholderText="Buscar con DuckDuckGo o escribir una dirección"
+                             AutomationProperties.Name="Dirección o búsqueda"
+                             FontSize="14" Height="32" MinHeight="0" Padding="34,5,38,6" CornerRadius="16" TextAlignment="Center"
+                             VerticalContentAlignment="Center" IsEnabled="False" />
+                    <FontIcon x:Name="SiteInfoIcon" Glyph="&#xE721;" FontSize="13" Margin="13,0,0,0" Opacity="0.75"
+                              HorizontalAlignment="Left" VerticalAlignment="Center" IsHitTestVisible="False" />
+                    <!-- Shown only while the page is not at 100 %; a click puts it back. -->
+                    <Button x:Name="ZoomChip" Click="ZoomChip_Click" Visibility="Collapsed"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,35,0"
+                            ToolTipService.ToolTip="Restablecer el zoom (Ctrl+0)" AutomationProperties.Name="Restablecer el zoom"
+                            Background="Transparent" BorderThickness="0" Height="26" MinWidth="0" Padding="8,0" CornerRadius="13">
+                        <TextBlock x:Name="ZoomChipText" FontSize="12" VerticalAlignment="Center" />
+                    </Button>
+                    <Button x:Name="BookmarkButton" Click="BookmarkButton_Click" IsEnabled="False"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,3,0"
+                            ToolTipService.ToolTip="Agregar esta página a favoritos (Ctrl+D)" AutomationProperties.Name="Agregar a favoritos"
+                            Background="Transparent" BorderThickness="0" Width="30" Height="26" MinWidth="0" Padding="0" CornerRadius="13">
+                        <FontIcon x:Name="BookmarkIcon" Glyph="&#xE734;" FontSize="14" />
+                    </Button>
+                </Grid>
+                <Button x:Name="FavoritesButton" Grid.Column="5" Click="Favorites_Click" Background="Transparent" BorderThickness="0" Width="36" Height="32" MinWidth="0" Padding="0" CornerRadius="4"
+                        ToolTipService.ToolTip="Favoritos (Ctrl+Mayús+O)" AutomationProperties.Name="Favoritos">
+                    <FontIcon Glyph="&#xE728;" FontSize="16" />
+                </Button>
+                <Button x:Name="HistoryButton" Grid.Column="6" Click="History_Click" Background="Transparent" BorderThickness="0" Width="36" Height="32" MinWidth="0" Padding="0" CornerRadius="4"
+                        ToolTipService.ToolTip="Historial (Ctrl+H)" AutomationProperties.Name="Historial">
+                    <FontIcon Glyph="&#xE81C;" FontSize="16" />
+                </Button>
+                <Button x:Name="DownloadsButton" Grid.Column="7" Click="Downloads_Click" Background="Transparent" BorderThickness="0" Width="36" Height="32" MinWidth="0" Padding="0" CornerRadius="4"
+                        ToolTipService.ToolTip="Descargas (Ctrl+J)" AutomationProperties.Name="Descargas">
+                    <FontIcon Glyph="&#xE896;" FontSize="16" />
+                </Button>
+                <Button x:Name="MainMenuButton" Grid.Column="8" Click="MainMenu_Click"
+                        ToolTipService.ToolTip="Configuración y más (Alt+F)" AutomationProperties.Name="Configuración y más"
+                        Background="Transparent" BorderThickness="0" Width="36" Height="32" MinWidth="0" Padding="0" CornerRadius="4">
+                    <FontIcon Glyph="&#xE712;" FontSize="16" />
+                </Button>
+            </Grid>
+            <Grid x:Name="BookmarksBar" Grid.Row="1" Padding="8,0,8,0" ColumnSpacing="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+                    <StackPanel x:Name="BookmarksPanel" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                        <Button x:Name="TestPageButton" Click="TestPageButton_Click" IsEnabled="False" Visibility="Collapsed"
+                                Background="Transparent" BorderThickness="0" Padding="10,5"
+                                ToolTipService.ToolTip="Abrir la página local de diagnóstico">
+                            <StackPanel Orientation="Horizontal" Spacing="7">
+                                <FontIcon Glyph="&#xE80F;" FontSize="12" />
+                                <TextBlock Text="Página de prueba" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="TestScrollButton" Click="TestScrollButton_Click" IsEnabled="False" Visibility="Collapsed"
+                                Background="Transparent" BorderThickness="0" Padding="10,5"
+                                ToolTipService.ToolTip="Desplazar la página de prueba para comprobar el cristal"
+                                FontSize="12">
+                            <StackPanel Orientation="Horizontal" Spacing="7">
+                                <FontIcon Glyph="&#xE74B;" FontSize="12" />
+                                <TextBlock Text="Probar desplazamiento" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+                <StackPanel x:Name="BookmarksEmpty" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center" Visibility="Collapsed" Margin="6,0,0,0">
+                    <TextBlock Text="Para un acceso rápido, coloque sus favoritos aquí en la barra de favoritos." FontSize="12" Opacity="0.75" VerticalAlignment="Center" />
+                    <HyperlinkButton Content="Administrar favoritos ahora" Click="Favorites_Click" FontSize="12" Padding="2,0" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock x:Name="ModeLabel" Grid.Column="1" Text="LABORATORIO" Visibility="Collapsed" FontSize="10" FontWeight="SemiBold"
+                           CharacterSpacing="110" Foreground="#FF101820" VerticalAlignment="Center" />
+            </Grid>
+        </Grid>
+        <ProgressBar x:Name="LoadBar" Visibility="Collapsed" Height="3" MinHeight="0" VerticalAlignment="Top" Margin="0,106,0,0"
+                     IsHitTestVisible="False" Background="Transparent" AutomationProperties.Name="Cargando la página" />
+        <Border x:Name="SettingsPagePanel" RightTapped="SettingsPagePanel_RightTapped" ContextRequested="SettingsPagePanel_ContextRequested" Visibility="Collapsed" Margin="0,108,0,0"
+                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <ContentControl x:Name="SettingsPageContent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+        </Border>
+        <Border x:Name="ManagementDismiss" Background="Transparent" Visibility="Collapsed" PointerPressed="ManagementDismiss_PointerPressed" />
+        <Border x:Name="ManagementPanel" Visibility="Collapsed" Margin="0,80,8,8"
+                Width="360" HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="1" CornerRadius="8" Translation="0,0,32"
+                Background="Transparent" SizeChanged="Overlay_SizeChanged">
+            <Grid RowSpacing="8" Padding="12,10,8,10">
+                <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                <Grid ColumnSpacing="2">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <FontIcon x:Name="ManagementIcon" Glyph="&#xE713;" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock x:Name="ManagementTitle" Grid.Column="1" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <StackPanel x:Name="ManagementActions" Grid.Column="2" Orientation="Horizontal" Spacing="2" />
+                    <Button x:Name="ManagementCloseButton" Grid.Column="3" Click="CloseManagement_Click" AutomationProperties.Name="Cerrar" ToolTipService.ToolTip="Cerrar" CornerRadius="4"
+                            Background="Transparent" BorderThickness="0" Width="30" Height="30" MinWidth="0" Padding="0">
+                        <FontIcon Glyph="&#xE711;" FontSize="12" />
+                    </Button>
+                </Grid>
+                <ContentControl x:Name="ManagementContent" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+            </Grid>
+        </Border>
+        <Border x:Name="FindPanel" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="0,148,16,0" Padding="6,6,4,6" CornerRadius="8" BorderThickness="1" Translation="0,0,32">
+            <StackPanel Orientation="Horizontal" Spacing="2">
+                <Grid>
+                    <TextBox x:Name="FindBox" Width="220" Height="32" MinHeight="0" FontSize="13" Padding="30,6,8,5" CornerRadius="4"
+                             PlaceholderText="Buscar en la página" VerticalContentAlignment="Center"
+                             AutomationProperties.Name="Buscar en la página" TextChanged="FindBox_TextChanged" KeyDown="FindBox_KeyDown" />
+                    <FontIcon Glyph="&#xE721;" FontSize="12" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" IsHitTestVisible="False" />
+                </Grid>
+                <!-- Beside the box, not inside it: the box's own clear button lives at its right edge. -->
+                <TextBlock x:Name="FindCount" FontSize="11" Opacity="0.7" MinWidth="78" Margin="6,0,0,0" TextAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False" AutomationProperties.LiveSetting="Polite" />
+                <Border Width="1" Height="18" Margin="4,0,2,0" Background="#33808080" />
+                <Button x:Name="FindPreviousButton" Click="FindPrevious_Click" AutomationProperties.Name="Coincidencia anterior"
+                        ToolTipService.ToolTip="Anterior (Mayús+Entrar)" Width="32" Height="32" MinWidth="0" Padding="0" CornerRadius="4"
+                        Background="Transparent" BorderThickness="0"><FontIcon Glyph="&#xE70E;" FontSize="12" /></Button>
+                <Button x:Name="FindNextButton" Click="FindNext_Click" AutomationProperties.Name="Coincidencia siguiente"
+                        ToolTipService.ToolTip="Siguiente (Entrar)" Width="32" Height="32" MinWidth="0" Padding="0" CornerRadius="4"
+                        Background="Transparent" BorderThickness="0"><FontIcon Glyph="&#xE70D;" FontSize="12" /></Button>
+                <Button x:Name="FindCloseButton" Click="CloseFind_Click" AutomationProperties.Name="Cerrar búsqueda"
+                        ToolTipService.ToolTip="Cerrar (Esc)" Width="32" Height="32" MinWidth="0" Padding="0" CornerRadius="4"
+                        Background="Transparent" BorderThickness="0"><FontIcon Glyph="&#xE711;" FontSize="12" /></Button>
+            </StackPanel>
+        </Border>
+        <!-- Address bar suggestions: what Enter would do, open tabs, favourites and history that match what is being typed. -->
+        <Border x:Name="SuggestPanel" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top"
+                BorderThickness="1" CornerRadius="8" Padding="4" Translation="0,0,32">
+            <StackPanel x:Name="SuggestItems" Spacing="0" />
+        </Border>
+        <!-- Hover card of a tab: preview, title, address and memory. It glides from tab to tab (see MainWindow.TabCard.cs). -->
+        <Border x:Name="TabCard" Visibility="Collapsed" Opacity="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,42,0,0"
+                Width="292" CornerRadius="8" BorderThickness="1" Padding="12" IsHitTestVisible="False" Translation="0,0,32">
+            <StackPanel x:Name="TabCardContent" Spacing="8">
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                    <Grid x:Name="TabCardIcon" Width="16" Height="16" VerticalAlignment="Top" Margin="0,1,0,0" />
+                    <TextBlock x:Name="TabCardTitle" Grid.Column="1" FontSize="13" FontWeight="SemiBold" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" />
+                </Grid>
+                <TextBlock x:Name="TabCardHost" FontSize="11" Opacity="0.7" TextTrimming="CharacterEllipsis" />
+                <Border x:Name="TabCardPreview" CornerRadius="6" Height="150" Background="#22808080">
+                    <Grid>
+                        <FontIcon x:Name="TabCardPlaceholder" Glyph="&#xE774;" FontSize="34" Opacity="0.35" />
+                        <Image x:Name="TabCardImage" Stretch="UniformToFill" />
+                    </Grid>
+                </Border>
+                <TextBlock x:Name="TabCardMemory" FontSize="11" Opacity="0.8" />
+            </StackPanel>
+        </Border>
+        <Border x:Name="MenuDismiss" Background="Transparent" Visibility="Collapsed" PointerPressed="MenuDismiss_PointerPressed" />
+        <Border x:Name="MenuBorder" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Width="344" BorderThickness="1" CornerRadius="8" Padding="4" Translation="0,0,32"
+                SizeChanged="Overlay_SizeChanged" PreviewKeyDown="Menu_PreviewKeyDown">
+            <Border.Background>
+                <AcrylicBrush TintColor="#EDF3F8" TintOpacity="0.10" FallbackColor="#10EDF3F8" />
+            </Border.Background>
+            <ScrollViewer x:Name="MenuScroll" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="MenuItems" Spacing="0" />
+            </ScrollViewer>
+        </Border>
+        <Border x:Name="PerformanceBadge" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Margin="16,0,0,16" Padding="8" Background="#E6F1F5F9">
+            <TextBlock x:Name="PerformanceText" FontSize="11" FontFamily="Consolas" Foreground="#101820" />
+        </Border>
+        <TextBlock x:Name="StartupText" Text="Iniciando Chromium…" Foreground="#FF38576B"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" />
+        <InfoBar x:Name="ErrorBar" IsOpen="False" Severity="Error" IsClosable="True"
+                 VerticalAlignment="Top" Margin="16,148,16,0" />
+        </Grid>
+        <Border x:Name="SandboxBanner" Grid.Row="1" Grid.ColumnSpan="2" Background="#EDFFF4D8" BorderBrush="#FFD2AE6D" BorderThickness="0,1,0,0" Padding="11,2,4,2">
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <FontIcon Glyph="&#xE7BA;" FontSize="12" Foreground="#FF63471A" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="Laboratorio sin sandbox de Chromium: no introduzcas contraseñas ni datos sensibles."
+                           Foreground="#FF63471A" FontSize="12" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                <Button x:Name="SandboxCloseButton" Grid.Column="2" Click="CloseSandboxBanner_Click" Background="Transparent" BorderThickness="0"
+                        Width="28" Height="24" MinWidth="0" Padding="0" AutomationProperties.Name="Ocultar aviso" ToolTipService.ToolTip="Ocultar aviso en esta ventana">
+                    <FontIcon Glyph="&#xE711;" FontSize="10" Foreground="#FF63471A" />
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,24 @@
+name: Informar un fallo
+description: Describe un fallo reproducible en My Own Browser.
+title: "[Fallo] "
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Versión de la aplicación y de Windows
+      description: La versión aparece en Ayuda y comentarios → Acerca de.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Pasos para reproducirlo
+      description: Incluye lo que esperabas y lo que ocurrió. Indica si instalaste el EXE o usaste el ZIP.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Captura o fragmento del registro
+      description: Revisa el contenido y elimina URLs privadas, nombres de usuario y rutas personales antes de adjuntarlo.
+

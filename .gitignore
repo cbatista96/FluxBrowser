@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+
+# Salida de tools/publish.ps1 (paquetes y carpeta publicada)
+artifacts/
+TestResults/
+*.pfx
+*.p12
+*.key
