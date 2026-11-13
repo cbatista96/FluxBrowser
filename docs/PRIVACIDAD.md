@@ -8,7 +8,7 @@ Los sitios que abres reciben los datos propios de la conexión y pueden guardar 
 
 Las ventanas privadas no añaden entradas al historial ni restauran sus pestañas al reiniciar. Los archivos descargados, las capturas y los favoritos que guardes expresamente pueden permanecer en el equipo. Los sitios visitados y los servicios de red pueden observar sus propias conexiones.
 
-En Configuración → Privacidad, búsqueda y servicios puedes borrar datos de navegación. Para eliminar el perfil local completo en la versión de GitHub, cierra el navegador y elimina `%LOCALAPPDATA%\MyOwnBrowser` o la carpeta que hayas configurado mediante `MYOWNBROWSER_PROFILE`. Desinstalar el EXE conserva el perfil. Si envías un informe voluntario a GitHub, revisa antes las capturas y registros que adjuntes.
+En Configuración → Privacidad, búsqueda y servicios puedes borrar datos de navegación. Para eliminar el perfil local completo en la versión de GitHub, cierra el navegador y elimina `%LOCALAPPDATA%\FluxBrowser` o la carpeta que hayas configurado mediante `FLUXBROWSER_PROFILE`. Desinstalar el EXE conserva el perfil. Si envías un informe voluntario a GitHub, revisa antes las capturas y registros que adjuntes.
 
 Contacto de privacidad · [contact@worldmarketinglabs.com](mailto:contact@worldmarketinglabs.com). Los informes de seguridad también se reciben por [GitHub](https://github.com/cbatista96/FluxBrowser/security/advisories/new).
 

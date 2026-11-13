@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+  <!-- The logic under test is plain C# compiled straight from the app, so the tests do not need WinUI or CEF. -->
+  <ItemGroup>
+    <Compile Include="..\FluxBrowser\Browser\AddressResolver.cs" Link="AddressResolver.cs" />
+    <Compile Include="..\FluxBrowser\Browser\BookmarkStore.cs" Link="BookmarkStore.cs" />
+    <Compile Include="..\FluxBrowser\Browser\BookmarkHtml.cs" Link="BookmarkHtml.cs" />
+    <Compile Include="..\FluxBrowser\Browser\BrowserPreferences.cs" Link="BrowserPreferences.cs" />
+    <Compile Include="..\FluxBrowser\Browser\ViewportLayout.cs" Link="ViewportLayout.cs" />
+    <Compile Include="..\FluxBrowser\Browser\CommandLine.cs" Link="CommandLine.cs" />
+    <Compile Include="..\FluxBrowser\Browser\DefaultBrowser.cs" Link="DefaultBrowser.cs" />
+  </ItemGroup>
+</Project>

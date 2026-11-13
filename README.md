@@ -4,17 +4,17 @@ Un navegador de [World Marketing Labs](https://www.worldmarketinglabs.com/es).
 
 Navegador de escritorio de WinUI 3 y Chromium con barras translúcidas que desenfocan el contenido web real. **Vista previa técnica (0.9): todavía no es un lanzamiento estable.**
 
-[Descargar para Windows x64](https://github.com/cbatista96/FluxBrowser/releases/tag/v0.9.0) · [Galería](docs/capturas/README.md) · [Historial de versiones](CHANGELOG.md) · [Fallos conocidos](docs/FALLOS-CONOCIDOS.md) · [Informar un fallo](https://github.com/cbatista96/FluxBrowser/issues/new/choose)
+[Descargar para Windows x64](https://github.com/cbatista96/FluxBrowser/releases/tag/v0.9.1) · [Galería](docs/capturas/README.md) · [Historial de versiones](CHANGELOG.md) · [Fallos conocidos](docs/FALLOS-CONOCIDOS.md) · [Informar un fallo](https://github.com/cbatista96/FluxBrowser/issues/new/choose)
 
 ![Nueva pestaña de Flux Browser](docs/capturas/01-nueva-pestana.png)
 
-La versión 0.9.0 incluye un instalador EXE por usuario, un ZIP portable y sumas SHA-256. GitHub atesta la release. El instalador de esta vista previa carece de firma Authenticode. Consulta la [guía de Microsoft Store](docs/MICROSOFT-STORE.md) y la [política de privacidad](docs/PRIVACIDAD.md).
+La versión 0.9.1 incluye un instalador EXE por usuario, un ZIP portable y sumas SHA-256. GitHub atesta la release. El instalador de esta vista previa carece de firma Authenticode. Consulta la [guía de Microsoft Store](docs/MICROSOFT-STORE.md) y la [política de privacidad](docs/PRIVACIDAD.md).
 
 ## Motor y seguridad
 
 El motor predeterminado es **WebView2**: Chromium dentro de su **sandbox**, servido y actualizado por el Runtime de WebView2 de Windows. El cristal lo dibuja la propia página (`backdrop-filter`, `Assets\page-host.js`), de modo que la web sigue aislada. Los atajos con la web enfocada viajan por un canal que una página no puede falsificar (`Assets\page-keys.js`, mundo aislado de DevTools), y los permisos de sitios (cámara, micrófono, ubicación…) usan el aviso por sitio del motor.
 
-Si el equipo no tiene el Runtime de WebView2, la aplicación cae a **CEF**, que **no dispone del sandbox de Chromium**: en ese modo se muestra un aviso permanente, bloquea permisos y ventanas emergentes sin gesto del usuario, y conviene usar solo páginas de prueba. `MYOWNBROWSER_ENGINE=cef` o `=webview2` fuerza uno u otro; el registro (`logs\app.log`) indica cuál se eligió.
+Si el equipo no tiene el Runtime de WebView2, la aplicación cae a **CEF**, que **no dispone del sandbox de Chromium**: en ese modo se muestra un aviso permanente, bloquea permisos y ventanas emergentes sin gesto del usuario, y conviene usar solo páginas de prueba. `FLUXBROWSER_ENGINE=cef` o `=webview2` fuerza uno u otro; el registro (`logs\app.log`) indica cuál se eligió.
 
 Lo que sigue pendiente antes de un lanzamiento público está en **Estado de lanzamiento**.
 
@@ -27,8 +27,8 @@ Lo que sigue pendiente antes de un lanzamiento público está en **Estado de lan
 Desde PowerShell, en la carpeta del proyecto:
 
 ```powershell
-dotnet build .\MyOwnBrowser\MyOwnBrowser.csproj -p:Platform=x64
-.\MyOwnBrowser\bin\x64\Debug\net10.0-windows10.0.26100.0\win-x64\FluxBrowser.exe
+dotnet build .\FluxBrowser\FluxBrowser.csproj -p:Platform=x64
+.\FluxBrowser\bin\x64\Debug\net10.0-windows10.0.26100.0\win-x64\FluxBrowser.exe
 ```
 
 La aplicación abre **Nueva pestaña**, con búsqueda y accesos a favoritos, o restaura las pestañas normales guardadas. **Configuración** se abre en una pestaña independiente, sin reemplazar la web activa. La página de inicio del botón Inicio y la página de nuevas pestañas se configuran por separado. La barra de direcciones admite HTTP y HTTPS; el buscador predeterminado es configurable.
@@ -37,13 +37,13 @@ Al volver a ejecutar el mismo archivo, la instancia existente se activa y recupe
 
 El menú principal permite abrir la página local de diagnóstico; también se admite `browser:diagnostics` en la barra de direcciones. En esa página, el botón **Probar desplazamiento** envía una rueda directamente a CEF para observar cómo sus colores y textos se difuminan detrás de las barras. No sustituye una prueba de los dispositivos físicos de entrada.
 
-Para ejecutar las 92 pruebas xUnit (direcciones, marcadores, ajustes, sesión, línea de comandos, almacenamiento y registro del navegador):
+Para ejecutar las pruebas xUnit (direcciones, marcadores, ajustes, sesión, línea de comandos, almacenamiento y registro del navegador):
 
 ```powershell
-dotnet test .\MyOwnBrowser.Tests\MyOwnBrowser.Tests.csproj
+dotnet test .\FluxBrowser.Tests\FluxBrowser.Tests.csproj
 ```
 
-Las compilaciones de depuración admiten un guion de interfaz para probar sin enviar teclas ni clics al escritorio: `MYOWNBROWSER_TEST_UI="suggest:wiki|find:Windows|zoom:1.25|menu"` ejecuta esos pasos cada pocos segundos (`MYOWNBROWSER_TEST_UI_STEP` cambia el intervalo; la lista de pasos está en `MainWindow.DebugScript.cs`), y `MYOWNBROWSER_TEST_SLEEP_SECONDS` acorta la espera de las pestañas en suspensión. Úsalo siempre con `MYOWNBROWSER_PROFILE` apuntando a una carpeta desechable.
+Las compilaciones de depuración admiten un guion de interfaz para probar sin enviar teclas ni clics al escritorio: `FLUXBROWSER_TEST_UI="suggest:wiki|find:Windows|zoom:1.25|menu"` ejecuta esos pasos cada pocos segundos (`FLUXBROWSER_TEST_UI_STEP` cambia el intervalo; la lista de pasos está en `MainWindow.DebugScript.cs`), y `FLUXBROWSER_TEST_SLEEP_SECONDS` acorta la espera de las pestañas en suspensión. Úsalo siempre con `FLUXBROWSER_PROFILE` apuntando a una carpeta desechable.
 
 ## Distribución portable
 
@@ -53,15 +53,15 @@ powershell -ExecutionPolicy Bypass -File .\tools\publish.ps1
 
 El script ejecuta las pruebas, publica la aplicación autocontenida (no requiere instalar .NET) con ReadyToRun, elimina los idiomas que la interfaz no usa, **abre el ejecutable publicado como prueba de humo** (ventana principal y registro sin errores) y genera `artifacts\FluxBrowser-<versión>-win-x64.zip` con su suma SHA-256. Descomprime el zip en cualquier carpeta y ejecuta `FluxBrowser.exe`. Cierra la aplicación antes de lanzarlo (es de instancia única); `-SkipSmokeTest` omite esa comprobación.
 
-La versión se define en `MyOwnBrowser\MyOwnBrowser.csproj` (`<Version>`). El icono se regenera con `tools\make-icon.ps1`. **El paquete no está firmado**: Windows SmartScreen avisará al ejecutarlo hasta que se firme con un certificado de firma de código.
+La versión se define en `FluxBrowser\FluxBrowser.csproj` (`<Version>`). El icono se regenera con `tools\make-icon.ps1`. **El paquete no está firmado**: Windows SmartScreen avisará al ejecutarlo hasta que se firme con un certificado de firma de código.
 
 ### Instalación por usuario
 
-Dentro del zip, `install.ps1` copia la aplicación a `%LOCALAPPDATA%\Programs\MyOwnBrowser`, crea el acceso directo del menú Inicio, registra el navegador (HTTP/HTTPS) y añade la entrada de «Aplicaciones instaladas»; no requiere administrador:
+Dentro del zip, `install.ps1` copia la aplicación a `%LOCALAPPDATA%\Programs\FluxBrowser`, crea el acceso directo del menú Inicio, registra el navegador (HTTP/HTTPS) y añade la entrada de «Aplicaciones instaladas»; no requiere administrador:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1
-powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\Programs\MyOwnBrowser\uninstall.ps1"   # desinstalar (-RemoveData borra también el perfil)
+powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\Programs\FluxBrowser\uninstall.ps1"   # desinstalar (-RemoveData borra también el perfil)
 ```
 
 Sin instalar, **Configuración → Navegador predeterminado → Registrar en Windows** (o `FluxBrowser.exe --register` / `--unregister`) hace que aparezca en la lista de navegadores de Windows. Windows no permite que una aplicación se fije a sí misma como predeterminada: lo eliges tú en «Aplicaciones predeterminadas».
@@ -69,10 +69,10 @@ Sin instalar, **Configuración → Navegador predeterminado → Registrar en Win
 ## Línea de comandos, perfil y registro
 
 - `FluxBrowser.exe https://example.com https://example.org` abre las direcciones HTTP/HTTPS indicadas, también cuando ya hay una ventana abierta (la instancia existente las recibe). Cualquier otro argumento (archivos, otros esquemas, opciones) se ignora.
-- La variable de entorno `MYOWNBROWSER_PROFILE` (ruta absoluta) sustituye la carpeta del perfil `%LOCALAPPDATA%\MyOwnBrowser`: sirve para instalaciones portables y para probar sin tocar los datos reales.
+- La variable de entorno `FLUXBROWSER_PROFILE` (ruta absoluta) sustituye la carpeta del perfil `%LOCALAPPDATA%\FluxBrowser`: sirve para instalaciones portables y para probar sin tocar los datos reales.
 - Si Chromium deja de poder dibujar, la barra de avisos ofrece «Reiniciar navegador» (`--restart-after=PID --restore-session` internamente).
 - Las pestañas restauradas se cargan al seleccionarlas (con el título guardado): arrancar con muchas pestañas no crea un proceso de renderizado por cada una.
-- **Motor:** WebView2 es el predeterminado (con sandbox); `MYOWNBROWSER_ENGINE=cef` fuerza el respaldo CEF, `=webview2` fuerza WebView2. `--private` abre la primera ventana como ventana privada. En modo CEF las cookies y la caché están en memoria salvo que actives «Mantener las sesiones iniciadas»; con WebView2 esa opción viene activada en los perfiles nuevos. Detalles y plan en `docs\MIGRACION-WEBVIEW2.md`.
+- **Motor:** WebView2 es el predeterminado (con sandbox); `FLUXBROWSER_ENGINE=cef` fuerza el respaldo CEF, `=webview2` fuerza WebView2. `--private` abre la primera ventana como ventana privada. En modo CEF las cookies y la caché están en memoria salvo que actives «Mantener las sesiones iniciadas»; con WebView2 esa opción viene activada en los perfiles nuevos. Detalles y plan en `docs\MIGRACION-WEBVIEW2.md`.
 - Los errores inesperados se guardan en `<perfil>\logs\app.log` (rotación a 1 MB). Las excepciones de operaciones asíncronas se registran y se muestran en la barra de avisos en lugar de cerrar la aplicación. Si la aplicación no arranca, el motivo se registra ahí.
 - La sesión y el historial se escriben en segundo plano unos 400 ms después del último cambio (y siempre al cerrar), de modo que navegar no bloquea la interfaz con acceso a disco.
 
@@ -112,7 +112,7 @@ No se usan capturas de pantalla ni copias continuas de los píxeles a la CPU par
 - Disposición tomada de Edge: barra con Atrás, Adelante (solo si hay historial), Actualizar, Inicio, candado/información del sitio, estrella de favoritos y botones de Favoritos, Historial, Descargas y «Configuración y más». La dirección usa texto de 14 DIP centrado verticalmente; el campo se centra en la ventana y ajusta su anchura al texto y al espacio disponible, ampliándose con animación al editar. Menú principal en el orden de Edge con submenús «Más herramientas» y «Ayuda y comentarios», atajos visibles y un icono por opción.
 - Nueva pestaña con saludo, buscador, imagen del día de Bing (con su crédito) y accesos rápidos: los sitios más visitados más los fijados, con agregar y quitar. Admite menú contextual tanto en el fondo como en los accesos, también mediante `Mayús+F10`. Barra de favoritos vacía con el texto y el enlace de Edge.
 - Acciones de pestañas (`Ctrl+Mayús+A`): alternar pestañas verticales, organizar por sitio, reabrir, buscar entre pestañas abiertas y cerradas recientemente. Donde el menú cubre las barras usa acrílico opaco, para que no se transparenten sin desenfoque.
-- Captura de pantalla de la página (`Ctrl+Mayús+S`, se guarda en Imágenes\MyOwnBrowser y se copia al portapapeles), «Guardar como» (`Ctrl+S`, archivo completo MHTML mediante selector nativo) y eliminación selectiva de datos de navegación (`Ctrl+Mayús+Supr`): historial, cookies, caché y pestañas cerradas.
+- Captura de pantalla de la página (`Ctrl+Mayús+S`, se guarda en Imágenes\FluxBrowser y se copia al portapapeles), «Guardar como» (`Ctrl+S`, archivo completo MHTML mediante selector nativo) y eliminación selectiva de datos de navegación (`Ctrl+Mayús+Supr`): historial, cookies, caché y pestañas cerradas.
 
 La interfaz sigue la geometría de Windows 11: esquinas de 4 DIP en controles (botones, filas, campos) y de 8 DIP en superficies que flotan (menús, paneles, tarjetas), que además llevan sombra; texto de menús de 12 DIP, filas de 32 DIP e iconos de 14–16 DIP en una columna común de 16 DIP. Los botones de las barras comparten un único estilo «sutil» (sin placa en reposo ni deshabilitados, la misma placa tenue al pasar el ratón) definido una vez en `Motion\Fx.cs`. Los menús sobre Chromium tienen recorte redondeado y material GPU; sobre superficies XAML se utiliza `AcrylicBrush`. No se incluyen botones ficticios de servicios o extensiones de Microsoft.
 
@@ -163,4 +163,4 @@ Esta compilación es una **vista previa técnica portable**. Con WebView2 como m
 
 ## Datos y privacidad
 
-Los marcadores, ajustes, historial y sesión se guardan en texto claro en `%LOCALAPPDATA%\MyOwnBrowser` (`bookmarks.json`, `settings.json`, `history.json`, `session.json`); las URL pueden contener información sensible. Las escrituras usan archivos temporales y reemplazo del archivo final. Los archivos inválidos se notifican y no se sustituyen silenciosamente. La caché web está en memoria salvo que actives «Mantener las sesiones iniciadas»; en cualquier caso CEF mantiene archivos de funcionamiento y un registro en `%LOCALAPPDATA%\MyOwnBrowser\PrototypeCef`. Borrar el historial no elimina marcadores, sesión ni descargas.
+Los marcadores, ajustes, historial y sesión se guardan en texto claro en `%LOCALAPPDATA%\FluxBrowser` (`bookmarks.json`, `settings.json`, `history.json`, `session.json`); las URL pueden contener información sensible. Las escrituras usan archivos temporales y reemplazo del archivo final. Los archivos inválidos se notifican y no se sustituyen silenciosamente. La caché web está en memoria salvo que actives «Mantener las sesiones iniciadas»; en cualquier caso CEF mantiene archivos de funcionamiento y un registro en `%LOCALAPPDATA%\FluxBrowser\PrototypeCef`. Borrar el historial no elimina marcadores, sesión ni descargas.

@@ -165,7 +165,7 @@ Con el control XAML y zoom por CSS: **unas 3 semanas**. Si hace falta el puente 
 
 ## 13. Estado de la implementación (2026-11-03, zoom por CSS elegido)
 
-**WebView2 es ya el motor predeterminado** (CEF queda como respaldo si no hay Runtime o se fuerza con `MYOWNBROWSER_ENGINE=cef`). Todo lo siguiente se comprobó ejecutando la aplicación, incluida la compilación publicada; la prueba de humo de `publish.ps1` arranca ambos motores.
+**WebView2 es ya el motor predeterminado** (CEF queda como respaldo si no hay Runtime o se fuerza con `FLUXBROWSER_ENGINE=cef`). Todo lo siguiente se comprobó ejecutando la aplicación, incluida la compilación publicada; la prueba de humo de `publish.ps1` arranca ambos motores.
 
 **Hecho y verificado:**
 - **Fase 1:** `IWebSession` extraída; CEF intacto (89 pruebas xUnit y restauración perezosa).

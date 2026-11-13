@@ -10,13 +10,14 @@ AppPublisher=World Marketing Labs
 AppPublisherURL=https://www.worldmarketinglabs.com/es
 AppSupportURL=https://github.com/cbatista96/FluxBrowser/issues
 AppUpdatesURL=https://github.com/cbatista96/FluxBrowser/releases
-DefaultDirName={localappdata}\Programs\MyOwnBrowser
+DefaultDirName={localappdata}\Programs\FluxBrowser
+UsePreviousAppDir=no
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.19041
-SetupIconFile=..\MyOwnBrowser\Assets\AppIcon.ico
+SetupIconFile=..\FluxBrowser\Assets\AppIcon.ico
 UninstallDisplayIcon={app}\FluxBrowser.exe
 OutputDir=..\artifacts
 OutputBaseFilename=FluxBrowser-Setup-{#AppVersion}-win-x64
@@ -35,6 +36,9 @@ Source: "..\artifacts\publish\*"; DestDir: "{app}"; Excludes: "install.ps1,unins
 
 [Icons]
 Name: "{userprograms}\Flux Browser"; Filename: "{app}\FluxBrowser.exe"; WorkingDir: "{app}"
+
+[InstallDelete]
+Type: files; Name: "{userprograms}\My Own Browser.lnk"
 
 [Run]
 Filename: "{app}\FluxBrowser.exe"; Parameters: "--register"; Flags: runhidden

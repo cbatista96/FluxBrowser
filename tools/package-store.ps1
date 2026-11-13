@@ -14,7 +14,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $artifacts = Join-Path $root 'artifacts'
 $publish = Join-Path $artifacts 'publish'
-$project = Join-Path $root 'MyOwnBrowser/MyOwnBrowser.csproj'
+$project = Join-Path $root 'FluxBrowser/FluxBrowser.csproj'
 $version = ([xml](Get-Content $project -Raw)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
 
 if (-not (Test-Path (Join-Path $publish 'FluxBrowser.exe'))) {

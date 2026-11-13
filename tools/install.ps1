@@ -4,10 +4,10 @@
   in Windows and creates an "Installed apps" entry. Included at the root of the release zip, next to FluxBrowser.exe.
 .EXAMPLE
   powershell -ExecutionPolicy Bypass -File install.ps1
-  powershell -ExecutionPolicy Bypass -File install.ps1 -InstallDirectory D:\Apps\MyOwnBrowser
+  powershell -ExecutionPolicy Bypass -File install.ps1 -InstallDirectory D:\Apps\FluxBrowser
 #>
 param(
-    [string]$InstallDirectory = (Join-Path $env:LOCALAPPDATA 'Programs\MyOwnBrowser'),
+    [string]$InstallDirectory = (Join-Path $env:LOCALAPPDATA 'Programs\FluxBrowser'),
     [switch]$NoShortcut,
     [switch]$NoRegister
 )
@@ -19,7 +19,7 @@ if (-not (Test-Path (Join-Path $source $exeName))) { throw "No se encontró $exe
 $InstallDirectory = [IO.Path]::GetFullPath($InstallDirectory)
 if ($InstallDirectory.TrimEnd('\') -eq $source.TrimEnd('\')) { throw 'El destino no puede ser la carpeta de origen.' }
 
-$running = Get-Process FluxBrowser,MyOwnBrowser -ErrorAction SilentlyContinue | Where-Object { $_.Path -and $_.Path.StartsWith($InstallDirectory.TrimEnd('\') + '\', 'OrdinalIgnoreCase') }
+$running = Get-Process FluxBrowser -ErrorAction SilentlyContinue | Where-Object { $_.Path -and $_.Path.StartsWith($InstallDirectory.TrimEnd('\') + '\', 'OrdinalIgnoreCase') }
 if ($running) { throw 'Cierra Flux Browser antes de instalar o actualizar.' }
 
 Write-Host "Instalando en $InstallDirectory ..."
@@ -47,7 +47,7 @@ if (-not $NoRegister) {
     if ($registration.ExitCode -ne 0) { Write-Warning 'No se pudo registrar el navegador en Windows (consulta logs\app.log del perfil).' }
 }
 
-$key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\MyOwnBrowser'
+$key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\FluxBrowser'
 New-Item -Path $key -Force | Out-Null
 $size = [int]((Get-ChildItem $InstallDirectory -Recurse -File | Measure-Object Length -Sum).Sum / 1KB)
 $properties = @{

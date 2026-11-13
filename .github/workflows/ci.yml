@@ -13,6 +13,6 @@ jobs:
         with:
           global-json-file: global.json
       - name: Build (Release)
-        run: dotnet build MyOwnBrowser/MyOwnBrowser.csproj -c Release -p:Platform=x64 --nologo
+        run: dotnet build FluxBrowser/FluxBrowser.csproj -c Release -p:Platform=x64 --nologo
       - name: Test
-        run: dotnet test MyOwnBrowser.Tests/MyOwnBrowser.Tests.csproj -c Release --nologo
+        run: dotnet test FluxBrowser.Tests/FluxBrowser.Tests.csproj -c Release --nologo

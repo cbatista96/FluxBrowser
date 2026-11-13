@@ -15,7 +15,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
-$project = Join-Path $root 'MyOwnBrowser\MyOwnBrowser.csproj'
+$project = Join-Path $root 'FluxBrowser\FluxBrowser.csproj'
 $artifacts = Join-Path $root 'artifacts'
 $publish = Join-Path $artifacts 'publish'
 
@@ -31,7 +31,7 @@ Write-Host "Flux Browser $version ($Configuration, win-x64)"
 
 if (-not $SkipTests) {
     Step 'Pruebas automáticas'
-    Run 'dotnet' @('test', (Join-Path $root 'MyOwnBrowser.Tests\MyOwnBrowser.Tests.csproj'), '-c', $Configuration, '--nologo', '-v:m')
+    Run 'dotnet' @('test', (Join-Path $root 'FluxBrowser.Tests\FluxBrowser.Tests.csproj'), '-c', $Configuration, '--nologo', '-v:m')
 }
 
 Step 'Publicando (autocontenido, ReadyToRun)'
@@ -66,10 +66,10 @@ if (-not $SkipSmokeTest) {
         Step "Prueba de humo del ejecutable publicado (motor: $engine)"
         # A throw-away profile makes this copy an independent instance, so it does not collide with a browser you already have open.
         $profile = Join-Path ([IO.Path]::GetTempPath()) ("mob-smoke-" + [guid]::NewGuid().ToString('N'))
-        $previousProfile = $env:MYOWNBROWSER_PROFILE
-        $previousEngine = $env:MYOWNBROWSER_ENGINE
-        $env:MYOWNBROWSER_PROFILE = $profile
-        $env:MYOWNBROWSER_ENGINE = $engine
+        $previousProfile = $env:FLUXBROWSER_PROFILE
+        $previousEngine = $env:FLUXBROWSER_ENGINE
+        $env:FLUXBROWSER_PROFILE = $profile
+        $env:FLUXBROWSER_ENGINE = $engine
         $process = $null
         try {
             $process = Start-Process (Join-Path $publish 'FluxBrowser.exe') -PassThru
@@ -86,8 +86,8 @@ if (-not $SkipSmokeTest) {
         finally {
             if ($process -and -not $process.HasExited) { Stop-Process -Id $process.Id -Force }
             Start-Sleep -Seconds 2
-            $env:MYOWNBROWSER_PROFILE = $previousProfile
-            $env:MYOWNBROWSER_ENGINE = $previousEngine
+            $env:FLUXBROWSER_PROFILE = $previousProfile
+            $env:FLUXBROWSER_ENGINE = $previousEngine
             if (Test-Path $profile) { Remove-Item $profile -Recurse -Force -ErrorAction SilentlyContinue }
         }
     }

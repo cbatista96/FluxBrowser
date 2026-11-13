@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prueba de cristal | Flux Browser</title>
+  <style>
+    :root { color-scheme: light; font-family: "Segoe UI", sans-serif; color: #172f42; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f7f4ed; }
+    .start { height: 0; }
+    .hero { min-height: 640px; padding: 8vh clamp(28px, 8vw, 130px); display: grid; align-content: center;
+      background: radial-gradient(circle at 75% 25%, #f6d79a 0 12%, transparent 12.2%),
+      linear-gradient(125deg, #dcece7 0%, #b8d5d4 52%, #8ab8bd 100%); }
+    .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { max-width: 760px; margin: 24px 0; font-size: clamp(52px, 8vw, 108px); line-height: .96; letter-spacing: -.055em; font-weight: 650; }
+    .intro { max-width: 500px; font-size: 19px; line-height: 1.65; }
+    .note { margin-top: 40px; font-size: 14px; font-weight: 600; }
+    .stripe { min-height: 410px; padding: 76px clamp(28px, 8vw, 130px); display: flex; flex-direction: column; justify-content: center; }
+    .stripe h2 { margin: 8px 0; font-size: clamp(45px, 7vw, 84px); letter-spacing: -.045em; }
+    .stripe p { max-width: 570px; font-size: 18px; line-height: 1.6; }
+    .coral { background: #f29a83; }
+    .blue { background: #5b86b1; color: white; }
+    .lime { background: #cedc9a; }
+    .sticky { position: sticky; top: 0; padding: 14px 28px; background: #263d4a; color: white; font-size: 13px; z-index: 1; }
+    .fixed { position: fixed; right: 24px; bottom: 60px; padding: 10px 14px; border-radius: 999px;
+      background: #ffffffdf; color: #243f51; font-size: 12px; box-shadow: 0 5px 22px #122e3922; }
+    .events { position: fixed; left: 24px; bottom: 20px; padding: 10px 14px; border-radius: 8px;
+      background: #ffffffdf; color: #243f51; font-size: 12px; box-shadow: 0 5px 22px #122e3922; }
+    .trace { bottom: 64px; max-width: calc(100% - 48px); }
+    .form { padding: 70px clamp(28px, 8vw, 130px); background: #f7f4ed; }
+    input, select { font: inherit; padding: 10px; margin: 6px 6px 6px 0; }
+  </style>
+</head>
+<body>
+  <div class="start"></div>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Laboratorio visual · 01</div>
+      <h1>La web, a través del cristal.</h1>
+      <p class="intro">Esta página local permite comprobar si el contenido realmente pasa por detrás de las barras y cambia el desenfoque al desplazarse.</p>
+      <p class="note">Desplázate hacia abajo para probar el efecto ↓</p>
+    </section>
+    <div class="sticky">Elemento sticky de diagnóstico · comprueba su comportamiento al desplazarte</div>
+    <section class="stripe coral">
+      <div class="eyebrow">Color y movimiento</div>
+      <h2>Coral en tránsito.</h2>
+      <p>El color de esta sección debe verse difuminado debajo de las dos barras, mientras sus botones permanecen nítidos.</p>
+    </section>
+    <section class="stripe blue">
+      <div class="eyebrow">Contraste</div>
+      <h2>Azul profundo.</h2>
+      <p>El desenfoque tiene que seguir el contenido de Chromium, no una imagen estática ni el fondo del escritorio.</p>
+    </section>
+    <section class="stripe lime">
+      <div class="eyebrow">Continuidad</div>
+      <h2>Otra perspectiva.</h2>
+      <p>Prueba también a cambiar el tamaño de la ventana y a moverla entre pantallas con diferente escala.</p>
+    </section>
+    <section class="form">
+      <h2>Entrada de diagnóstico</h2>
+      <p>Estos controles sirven para comprobar la interacción básica; no introduzcas datos sensibles.</p>
+      <label>Texto <input type="text" placeholder="Escribe aquí"></label>
+      <label>Selección <select><option>Primera opción</option><option>Segunda opción</option></select></label>
+      <p><a href="#top" id="top">Enlace de prueba</a></p>
+    </section>
+  </main>
+  <div class="fixed">Elemento fixed de diagnóstico</div>
+  <div class="events" id="events">Rueda: 0 · Clics: 0 · Teclas: 0 · Scroll: 0 px</div>
+  <div class="events trace" id="trace">Gira la rueda una vez para medir la trayectoria del desplazamiento</div>
+  <script>
+    const counts = { wheel: 0, click: 0, keydown: 0 };
+    const output = document.getElementById("events");
+    const update = () => {
+      output.textContent = `Rueda: ${counts.wheel} · Clics: ${counts.click} · Teclas: ${counts.keydown} · Scroll: ${Math.round(window.scrollY)} px`;
+    };
+    for (const type of Object.keys(counts)) {
+      window.addEventListener(type, () => { counts[type]++; update(); }, { passive: true });
+    }
+    window.addEventListener("scroll", update, { passive: true });
+
+    // Registro de trayectoria: muestrea scrollY en cada fotograma desde la primera rueda hasta 250 ms sin movimiento.
+    const trace = document.getElementById("trace");
+    let samples = null, wheelTimes = [], lastMove = 0;
+    const sample = now => {
+      const y = window.scrollY;
+      if (y !== samples[samples.length - 1][1]) lastMove = now;
+      samples.push([now, y]);
+      if (now - lastMove < 250) { requestAnimationFrame(sample); return; }
+      const t0 = wheelTimes[0], y0 = samples[0][1];
+      const moving = samples.filter(s => s[1] !== y0);
+      const total = samples[samples.length - 1][1] - y0;
+      const at = f => { const s = samples.find(p => Math.abs(p[1] - y0) >= Math.abs(total) * f); return s ? Math.round(s[0] - t0) : 0; };
+      const end = moving.length ? Math.round(moving[moving.length - 1][0] - t0) : 0;
+      trace.textContent = `Gesto: ${wheelTimes.length} rueda(s) · ${Math.round(total)} px · ` +
+        `inicio ${at(0.001)} ms · 50% ${at(0.5)} ms · 90% ${at(0.9)} ms · fin ${end} ms · ${moving.length} fotogramas con movimiento`;
+      document.title = "TRACE " + trace.textContent;
+      samples = null; wheelTimes = [];
+    };
+    window.addEventListener("wheel", () => {
+      const now = performance.now();
+      wheelTimes.push(now);
+      if (!samples) { samples = [[now, window.scrollY]]; lastMove = now; requestAnimationFrame(sample); }
+    }, { passive: true });
+  </script>
+</body>
+</html>

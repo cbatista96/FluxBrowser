@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## 0.9.1 — vista previa técnica
+
+- Unifica el nombre Flux Browser en el menú de ayuda, Acerca de, diagnóstico, rutas de Windows, registro del navegador, código y empaquetado.
+- Traslada el perfil anterior al directorio de Flux Browser si aún no existe uno nuevo. Conserva las carpetas de descargas que el usuario eligió.
+
 ## 0.9.0 — vista previa técnica
 
 ### Distribución
@@ -44,7 +49,7 @@
 - Rutas con barras invertidas perdidas en el README.
 
 #### Pruebas
-- Guion de interfaz para compilaciones de depuración (`MYOWNBROWSER_TEST_UI`, `MYOWNBROWSER_TEST_SLEEP_SECONDS`): abre cada superficie sin enviar teclas ni clics al escritorio. Con él se comprobaron tema claro y oscuro, menús, paneles, sugerencias, búsqueda, zoom, pestañas verticales, suspensión y reanudación, atajos nuevos y el arranque con CEF. Sin comprobar con dispositivos físicos: teclado, táctil y lector de pantalla.
+- Guion de interfaz para compilaciones de depuración (`FLUXBROWSER_TEST_UI`, `FLUXBROWSER_TEST_SLEEP_SECONDS`): abre cada superficie sin enviar teclas ni clics al escritorio. Con él se comprobaron tema claro y oscuro, menús, paneles, sugerencias, búsqueda, zoom, pestañas verticales, suspensión y reanudación, atajos nuevos y el arranque con CEF. Sin comprobar con dispositivos físicos: teclado, táctil y lector de pantalla.
 
 
 ### Pulido de barras, pestañas y desplazamiento (WebView2)
@@ -77,7 +82,7 @@
 - **Cristal en la página** (`Assets/page-host.js`): `backdrop-filter` inyectado desde el host; verificado a 120 Hz, con zoom y en PDF, páginas de error y `view-source`. La página reserva el hueco bajo la barra con `padding` en la raíz (sin reflujo ni traslación del control).
 - **Zoom por CSS**, con el cristal compensado. Limitación: sitios con `vw` o anchos fijos se desbordan al ampliar.
 - **Atajos con la web enfocada**: canal propio en un mundo aislado de la página (solo teclas de confianza, imposible de falsificar desde un sitio), con los aceleradores nativos desactivados. El control web ahora tiene nombre accesible.
-- **Predeterminado:** WebView2 si el equipo tiene el Runtime (se registra la versión); si no, CEF. `MYOWNBROWSER_ENGINE=cef|webview2` fuerza uno. La prueba de humo de `publish.ps1` arranca los dos.
+- **Predeterminado:** WebView2 si el equipo tiene el Runtime (se registra la versión); si no, CEF. `FLUXBROWSER_ENGINE=cef|webview2` fuerza uno. La prueba de humo de `publish.ps1` arranca los dos.
 - **Pestañas y ventanas privadas** con perfil InPrivate del motor y `--private`; aislamiento de cookies comprobado con un servidor local.
 - **Menú contextual propio** con el material de cristal; **buscar en la página nativo**; **permisos con aviso por sitio** del motor; sesiones activadas en perfiles nuevos; sin compositor GPU en este modo; ajustes de rendimiento de CEF sustituidos por una nota.
 - Huecos conocidos (zoom CSS en sitios con `vw`, pruebas con teclado físico, IME, táctil y lector de pantalla): ver `docs/MIGRACION-WEBVIEW2.md`, sección 13.
@@ -88,7 +93,7 @@
 - **Sesiones persistentes opcionales** («Mantener las sesiones iniciadas»), desactivadas de serie por la falta de sandbox.
 - **Recuperación ante fallo de GPU**: «Reiniciar navegador» guarda las pestañas normales y las reabre en un proceso nuevo; también en Más herramientas.
 - **Restauración perezosa**: las pestañas guardadas no crean su sesión de Chromium hasta seleccionarlas (con 4 pestañas guardadas: 2 procesos de renderizado al arrancar, 3 tras abrir otra). Las sesiones guardan el título.
-- **Una instancia por perfil**: una copia con `MYOWNBROWSER_PROFILE` ya no choca con la que tienes abierta.
+- **Una instancia por perfil**: una copia con `FLUXBROWSER_PROFILE` ya no choca con la que tienes abierta.
 - **Pruebas xUnit** (89), flujo de integración continua y Dependabot semanal para mantener CefSharp/Chromium al día (el flujo de GitHub no se ha podido ejecutar localmente).
 
 ### Corregido
@@ -115,7 +120,7 @@
 - Icono de la aplicación (`tools\make-icon.ps1`), metadatos de versión y icono de ventana.
 - Efectos: barra de progreso de carga que aparece y se desvanece, entrada escalonada de la página de nueva pestaña, rebote de resorte al pasar el ratón y pulsar los botones de la barra y los accesos rápidos (en el hilo del compositor; respetan «Animaciones» y la preferencia de Windows).
 - Direcciones por línea de comandos, también hacia una instancia ya abierta.
-- Variable `MYOWNBROWSER_PROFILE` para carpeta de perfil alternativa.
+- Variable `FLUXBROWSER_PROFILE` para carpeta de perfil alternativa.
 - Registro de errores con rotación y red de seguridad para excepciones asíncronas (se registran y se avisan en lugar de cerrar la aplicación).
 - `tools\publish.ps1`: pruebas, publicación autocontenida, prueba de humo, zip y SHA-256.
 - Pruebas para línea de comandos, filtrado de hosts privados y almacenamiento diferido (ahora en xUnit).

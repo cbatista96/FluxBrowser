@@ -5,7 +5,7 @@
   powershell -ExecutionPolicy Bypass -File tools\make-icon.ps1
 #>
 param(
-    [string]$OutputDirectory = (Join-Path $PSScriptRoot '..\MyOwnBrowser\Assets')
+    [string]$OutputDirectory = (Join-Path $PSScriptRoot '..\FluxBrowser\Assets')
 )
 
 Add-Type -AssemblyName System.Drawing

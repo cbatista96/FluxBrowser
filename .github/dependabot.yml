@@ -3,8 +3,8 @@ version: 2
 updates:
   - package-ecosystem: nuget
     directories:
-      - /MyOwnBrowser
-      - /MyOwnBrowser.Tests
+      - /FluxBrowser
+      - /FluxBrowser.Tests
     schedule:
       interval: weekly
     groups:

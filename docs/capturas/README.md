@@ -1,4 +1,4 @@
-# Galería de Flux Browser 0.9.0
+# Galería de Flux Browser
 
 Capturas de la aplicación en Windows, a 1600 × 900, con un perfil de prueba.
 
@@ -45,3 +45,7 @@ Capturas de la aplicación en Windows, a 1600 × 900, con un perfil de prueba.
 ### Acerca de
 
 ![Acerca de](11-acerca-de.png)
+
+### Ayuda y comentarios
+
+![Menú de ayuda de Flux Browser](12-ayuda.png)
