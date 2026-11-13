@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using FluxBrowser.Browser;
 using Windows.Foundation;
@@ -46,12 +47,7 @@ public sealed partial class MainWindow
             tab.Title = "Nueva pestaña";
             BuildNewTab();
             if (!newTabWasVisible) RevealNewTab();
-            // Focus before another keystroke can arrive. On first layout the text box
-            // may not yet be focusable, so retry once on the dispatcher.
-            if (!NewTabSearch.Focus(FocusState.Programmatic)) DispatcherQueue.TryEnqueue(() =>
-            {
-                if (!_closing && _activeTab == tab && NewTabPanel.Visibility == Visibility.Visible) NewTabSearch.Focus(FocusState.Programmatic);
-            });
+            FocusNewTabSearch(tab);
         }
         else if (tab.Address == "browser:settings")
         {
@@ -68,6 +64,18 @@ public sealed partial class MainWindow
         }
         ResizeManagement();
         UpdateGlassRegions();
+    }
+
+    private void FocusNewTabSearch(BrowserTab tab)
+    {
+        NewTabSearch.Focus(FocusState.Programmatic);
+        // Collapsing a WebView can queue a native focus change after XAML has moved focus.
+        DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+        {
+            if (!_closing && _activeTab == tab && NewTabPanel.Visibility == Visibility.Visible &&
+                FocusManager.GetFocusedElement(RootGrid.XamlRoot) is not TextBox)
+                NewTabSearch.Focus(FocusState.Programmatic);
+        });
     }
 
     private void History_Click(object sender, RoutedEventArgs args) => ShowHistory();

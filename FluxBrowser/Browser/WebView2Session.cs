@@ -19,7 +19,7 @@ internal sealed class WebView2Session : IWebSession
     private static readonly string KeyScript = LoadScript("page-keys.js");
 
     private readonly Panel _host;
-    private readonly WebView2 _view = new() { Visibility = Visibility.Visible };
+    private readonly WebView2 _view = new() { Visibility = Visibility.Collapsed };
     private string _initialPage;
     private bool _ready;
     private readonly string _testPage;

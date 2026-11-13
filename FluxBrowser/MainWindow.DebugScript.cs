@@ -56,7 +56,7 @@ public sealed partial class MainWindow
                     case "newtab": TryAddTab(); break;
                     case "newtab-input":
                         if (NewTabPanel.Visibility != Visibility.Visible || NewTabSearch.FocusState == FocusState.Unfocused)
-                            throw new InvalidOperationException("La búsqueda de Nueva pestaña no tiene el foco.");
+                            throw new InvalidOperationException($"La búsqueda de Nueva pestaña no tiene el foco. Página: {_activeTab?.Address}; foco: {Microsoft.UI.Xaml.Input.FocusManager.GetFocusedElement(RootGrid.XamlRoot)?.GetType().Name}.");
                         NewTabSearch.Text = value;
                         Diagnostics.AppLog.Info("Nueva pestaña: campo de búsqueda enfocado.");
                         break;
