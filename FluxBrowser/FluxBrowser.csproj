@@ -49,7 +49,7 @@
     <EmbeddedResource Include="Assets\page-host.js" />
     <EmbeddedResource Include="Assets\page-keys.js" />
     <Content Include="Assets\AppIcon.ico" CopyToOutputDirectory="PreserveNewest" />
-    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="154.0.340" />
+    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="156.0.150" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.6.4" />
     <PackageReference Include="Vortice.Direct2D1" Version="3.8.3" />
