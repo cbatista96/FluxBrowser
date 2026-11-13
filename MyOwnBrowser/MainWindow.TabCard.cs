@@ -112,7 +112,7 @@ public sealed partial class MainWindow
     {
         bool internalPage = ViewportLayout.IsInternal(tab.Address);
         TabCardTitle.Text = tab.Title;
-        TabCardHost.Text = internalPage ? "My Own Browser" : DisplayHost(tab.Address);
+        TabCardHost.Text = internalPage ? "Flux Browser" : DisplayHost(tab.Address);
         TabCardIcon.Children.Clear();
         TabCardIcon.Children.Add(SiteIcon(internalPage ? tab.Address : FaviconLoader.Address(tab.Favicon, tab.Address)));
         double aspect = PageGrid.ActualWidth > 0 ? PageGrid.ActualHeight / PageGrid.ActualWidth : .6;

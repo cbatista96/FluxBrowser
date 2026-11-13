@@ -8,5 +8,5 @@
 | Descargas | Los archivos se conservan. El panel de descargas no conserva la lista después de cerrar la ventana. |
 | Firma de Windows | El instalador de esta vista previa requiere una firma Authenticode de un publicador con identidad validada. SHA-256 permite comprobar la integridad de la descarga. |
 
-Abre una incidencia desde [GitHub Issues](https://github.com/cbatista96/MyOwnBrowser/issues/new/choose). Adjunta un fragmento revisado de `%LOCALAPPDATA%\MyOwnBrowser\logs\app.log` si ayuda a reproducir el fallo. Consulta [CHANGELOG.md](../CHANGELOG.md) para ver las correcciones incluidas en cada versión.
+Abre una incidencia desde [GitHub Issues](https://github.com/cbatista96/FluxBrowser/issues/new/choose). Adjunta un fragmento revisado de `%LOCALAPPDATA%\MyOwnBrowser\logs\app.log` si ayuda a reproducir el fallo. Consulta [CHANGELOG.md](../CHANGELOG.md) para ver las correcciones incluidas en cada versión.
 

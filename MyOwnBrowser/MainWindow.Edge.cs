@@ -76,7 +76,7 @@ public sealed partial class MainWindow
             new("Configuración", "\uE713", ShowSettings),
             new("Ayuda y comentarios", "\uE897", ShowHelpMenu, "\u203A"),
             null,
-            new("Cerrar My Own Browser", "\uE8BB", Close)
+            new("Cerrar Flux Browser", "\uE8BB", Close)
         ], MainMenuPoint, width: 320);
     }
 
@@ -90,13 +90,15 @@ public sealed partial class MainWindow
         new(Preferences.ShowBookmarks ? "Ocultar barra de favoritos" : "Mostrar barra de favoritos", "\uE728",
             () => BrowserApp.SavePreferences(Preferences with { ShowBookmarks = !Preferences.ShowBookmarks }), "Ctrl+Mayús+B"),
         new("Página de diagnóstico", "\uE9D9", () => NavigateCurrent(_testPage)),
-        new("Reiniciar My Own Browser", "\uE72C", BrowserApp.RestartBrowser)
+        new("Reiniciar Flux Browser", "\uE72C", BrowserApp.RestartBrowser)
     ], MainMenuPoint, width: 320);
 
     private void ShowHelpMenu() => ShowMenu([
         new("Volver", "\uE72B", ShowMainMenu),
         null,
-        new("Acerca de My Own Browser", "\uE946", ShowAbout),
+        new("Acerca de Flux Browser", "\uE946", ShowAbout),
+        new("World Marketing Labs", "\uE774", () => TryAddTab("https://www.worldmarketinglabs.com/es")),
+        new("Informar un fallo", "\uE90F", () => TryAddTab("https://github.com/cbatista96/FluxBrowser/issues/new/choose")),
         new("Métodos abreviados de teclado", "\uE765", ShowShortcuts),
         new("Medir desplazamiento", "\uE9D9", BenchmarkScroll)
     ], MainMenuPoint, width: 320);
@@ -178,7 +180,10 @@ public sealed partial class MainWindow
     {
         var body = new StackPanel { Spacing = 6 };
         string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "?";
-        body.Children.Add(InfoLine("\uE774", $"My Own Browser {version} · WinUI 3 + Chromium"));
+        body.Children.Add(InfoLine("\uE774", $"Flux Browser {version} · WinUI 3 + Chromium"));
+        var publisher = new HyperlinkButton { Content = "World Marketing Labs" };
+        publisher.Click += (_, _) => TryAddTab("https://www.worldmarketinglabs.com/es");
+        body.Children.Add(publisher);
         body.Children.Add(InfoLine("\uE8A5", $"Registro de errores: {Diagnostics.AppLog.FilePath}"));
         if (WebEngine.UseWebView2)
             body.Children.Add(InfoLine("\uE950", $"Chromium {WebView2Session.RuntimeVersion} (Runtime de WebView2, con sandbox)"));
@@ -188,7 +193,7 @@ public sealed partial class MainWindow
             body.Children.Add(InfoLine("\uE943", $"CEF {Cef.CefVersion}"));
         }
         if (!WebEngine.UseWebView2) body.Children.Add(InfoLine("\uE7BA", "Sin sandbox de Chromium: no uses este navegador para datos sensibles."));
-        await ShowDialog("Acerca de My Own Browser", body);
+        await ShowDialog("Acerca de Flux Browser", body);
     }
 
     private async void ShowShortcuts()

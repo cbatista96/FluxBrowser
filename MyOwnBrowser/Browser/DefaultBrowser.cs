@@ -8,7 +8,7 @@ namespace MyOwnBrowser.Browser;
 /// </summary>
 internal static class DefaultBrowser
 {
-    public const string DisplayName = "My Own Browser";
+    public const string DisplayName = "Flux Browser";
     private const string ProgId = "MyOwnBrowserURL";
     private const string ClientKey = "MyOwnBrowser";
 

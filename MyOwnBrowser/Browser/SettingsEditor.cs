@@ -46,7 +46,7 @@ internal sealed class SettingsEditor : UserControl
         ("Página de inicio, inicio y pestaña nueva", "\uE80F"), ("Idiomas", "\uE8C1"),
         ("Descargas", "\uE896"), ("Accesibilidad", "\uE776"),
         ("Sistema y rendimiento", "\uE9D9"), ("Restablecer configuración", "\uE777"),
-        ("Extensiones", "\uEA86"), ("Acerca de My Own Browser", "\uE946"), ("Diagnóstico", "\uE9CE")
+        ("Extensiones", "\uEA86"), ("Acerca de Flux Browser", "\uE946"), ("Diagnóstico", "\uE9CE")
     ];
 
     public SettingsEditor(BrowserPreferences preferences, Action<BrowserPreferences> save, Action clearHistory, Action clearCookies,
@@ -380,7 +380,7 @@ internal sealed class SettingsEditor : UserControl
                 Group("Aplicaciones predeterminadas de Windows");
                 if (Program.HasPackageIdentity)
                 {
-                    Note("Registro del navegador", "El paquete registra HTTP y HTTPS. Elige My Own Browser en Aplicaciones predeterminadas de Windows.");
+                    Note("Registro del navegador", "El paquete registra HTTP y HTTPS. Elige Flux Browser en Aplicaciones predeterminadas de Windows.");
                     ActionButton("\uE713", "Abrir aplicaciones predeterminadas", () => OpenWindowsSettings("ms-settings:defaultapps"));
                     break;
                 }
@@ -478,16 +478,16 @@ internal sealed class SettingsEditor : UserControl
                 Group("Compatibilidad de extensiones");
                 Note("Extensiones de Edge y Chrome", "No disponibles: este prototipo no integra la API, el administrador ni la instalación de extensiones. No se simula compatibilidad con las tiendas.");
                 break;
-            case "Acerca de My Own Browser":
+            case "Acerca de Flux Browser":
                 Group("Versiones");
                 if (WebEngine.UseWebView2)
                 {
-                    Note("My Own Browser", $"Chromium {WebView2Session.RuntimeVersion} (Runtime de WebView2) · WinUI 3");
+                    Note("Flux Browser", $"Chromium {WebView2Session.RuntimeVersion} (Runtime de WebView2) · WinUI 3");
                     Note("Actualizaciones y sandbox", "El motor se ejecuta dentro del sandbox de Chromium y lo actualiza Windows junto con el Runtime de WebView2. La aplicación todavía no tiene actualizador propio: es una vista previa técnica.");
                 }
                 else
                 {
-                    Note("My Own Browser", $"Chromium {CefSharp.Cef.ChromiumVersion} · CEF {CefSharp.Cef.CefVersion} · WinUI 3");
+                    Note("Flux Browser", $"Chromium {CefSharp.Cef.ChromiumVersion} · CEF {CefSharp.Cef.CefVersion} · WinUI 3");
                     Note("Actualizaciones y sandbox", "Compilación de laboratorio sin sandbox ni actualizador automático. No es apta para navegación con datos sensibles.");
                 }
                 ActionButton("\uE946", "Ver información de la aplicación", _actions.ShowAbout);

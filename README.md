@@ -1,10 +1,12 @@
-# My Own Browser — laboratorio de cristal
+# Flux Browser
+
+Un navegador de [World Marketing Labs](https://www.worldmarketinglabs.com/es).
 
 Navegador de escritorio de WinUI 3 y Chromium con barras translúcidas que desenfocan el contenido web real. **Vista previa técnica (0.9): todavía no es un lanzamiento estable.**
 
-[Descargar para Windows x64](https://github.com/cbatista96/MyOwnBrowser/releases/tag/v0.9.0) · [Galería](docs/capturas/README.md) · [Historial de versiones](CHANGELOG.md) · [Fallos conocidos](docs/FALLOS-CONOCIDOS.md) · [Informar un fallo](https://github.com/cbatista96/MyOwnBrowser/issues/new/choose)
+[Descargar para Windows x64](https://github.com/cbatista96/FluxBrowser/releases/tag/v0.9.0) · [Galería](docs/capturas/README.md) · [Historial de versiones](CHANGELOG.md) · [Fallos conocidos](docs/FALLOS-CONOCIDOS.md) · [Informar un fallo](https://github.com/cbatista96/FluxBrowser/issues/new/choose)
 
-![Nueva pestaña de My Own Browser](docs/capturas/01-nueva-pestana.png)
+![Nueva pestaña de Flux Browser](docs/capturas/01-nueva-pestana.png)
 
 La versión 0.9.0 incluye un instalador EXE por usuario, un ZIP portable y sumas SHA-256. GitHub atesta la release. El instalador de esta vista previa carece de firma Authenticode. Consulta la [guía de Microsoft Store](docs/MICROSOFT-STORE.md) y la [política de privacidad](docs/PRIVACIDAD.md).
 
@@ -26,7 +28,7 @@ Desde PowerShell, en la carpeta del proyecto:
 
 ```powershell
 dotnet build .\MyOwnBrowser\MyOwnBrowser.csproj -p:Platform=x64
-.\MyOwnBrowser\bin\x64\Debug\net10.0-windows10.0.26100.0\win-x64\MyOwnBrowser.exe
+.\MyOwnBrowser\bin\x64\Debug\net10.0-windows10.0.26100.0\win-x64\FluxBrowser.exe
 ```
 
 La aplicación abre **Nueva pestaña**, con búsqueda y accesos a favoritos, o restaura las pestañas normales guardadas. **Configuración** se abre en una pestaña independiente, sin reemplazar la web activa. La página de inicio del botón Inicio y la página de nuevas pestañas se configuran por separado. La barra de direcciones admite HTTP y HTTPS; el buscador predeterminado es configurable.
@@ -49,7 +51,7 @@ Las compilaciones de depuración admiten un guion de interfaz para probar sin en
 powershell -ExecutionPolicy Bypass -File .\tools\publish.ps1
 ```
 
-El script ejecuta las pruebas, publica la aplicación autocontenida (no requiere instalar .NET) con ReadyToRun, elimina los idiomas que la interfaz no usa, **abre el ejecutable publicado como prueba de humo** (ventana principal y registro sin errores) y genera `artifacts\MyOwnBrowser-<versión>-win-x64.zip` con su suma SHA-256. Descomprime el zip en cualquier carpeta y ejecuta `MyOwnBrowser.exe`. Cierra la aplicación antes de lanzarlo (es de instancia única); `-SkipSmokeTest` omite esa comprobación.
+El script ejecuta las pruebas, publica la aplicación autocontenida (no requiere instalar .NET) con ReadyToRun, elimina los idiomas que la interfaz no usa, **abre el ejecutable publicado como prueba de humo** (ventana principal y registro sin errores) y genera `artifacts\FluxBrowser-<versión>-win-x64.zip` con su suma SHA-256. Descomprime el zip en cualquier carpeta y ejecuta `FluxBrowser.exe`. Cierra la aplicación antes de lanzarlo (es de instancia única); `-SkipSmokeTest` omite esa comprobación.
 
 La versión se define en `MyOwnBrowser\MyOwnBrowser.csproj` (`<Version>`). El icono se regenera con `tools\make-icon.ps1`. **El paquete no está firmado**: Windows SmartScreen avisará al ejecutarlo hasta que se firme con un certificado de firma de código.
 
@@ -62,11 +64,11 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\Programs\MyOwnBrowser\uninstall.ps1"   # desinstalar (-RemoveData borra también el perfil)
 ```
 
-Sin instalar, **Configuración → Navegador predeterminado → Registrar en Windows** (o `MyOwnBrowser.exe --register` / `--unregister`) hace que aparezca en la lista de navegadores de Windows. Windows no permite que una aplicación se fije a sí misma como predeterminada: lo eliges tú en «Aplicaciones predeterminadas».
+Sin instalar, **Configuración → Navegador predeterminado → Registrar en Windows** (o `FluxBrowser.exe --register` / `--unregister`) hace que aparezca en la lista de navegadores de Windows. Windows no permite que una aplicación se fije a sí misma como predeterminada: lo eliges tú en «Aplicaciones predeterminadas».
 
 ## Línea de comandos, perfil y registro
 
-- `MyOwnBrowser.exe https://example.com https://example.org` abre las direcciones HTTP/HTTPS indicadas, también cuando ya hay una ventana abierta (la instancia existente las recibe). Cualquier otro argumento (archivos, otros esquemas, opciones) se ignora.
+- `FluxBrowser.exe https://example.com https://example.org` abre las direcciones HTTP/HTTPS indicadas, también cuando ya hay una ventana abierta (la instancia existente las recibe). Cualquier otro argumento (archivos, otros esquemas, opciones) se ignora.
 - La variable de entorno `MYOWNBROWSER_PROFILE` (ruta absoluta) sustituye la carpeta del perfil `%LOCALAPPDATA%\MyOwnBrowser`: sirve para instalaciones portables y para probar sin tocar los datos reales.
 - Si Chromium deja de poder dibujar, la barra de avisos ofrece «Reiniciar navegador» (`--restart-after=PID --restore-session` internamente).
 - Las pestañas restauradas se cargan al seleccionarlas (con el título guardado): arrancar con muchas pestañas no crea un proceso de renderizado por cada una.
@@ -122,7 +124,7 @@ La rueda se reenvía a Chromium, que anima cada rendija con su curva de desplaza
 
 La página de diagnóstico registra la trayectoria de `scrollY` en cada fotograma tras una rueda y la muestra junto al título. Se comparó con Edge, en la misma página y con el mismo delta de 360:
 
-| Medida | Edge | My Own Browser |
+| Medida | Edge | Flux Browser |
 | --- | --- | --- |
 | Distancia | 300 px | 300 px |
 | 50 % del recorrido | 67 ms | 69 ms |

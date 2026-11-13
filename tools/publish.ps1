@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
   Builds a portable release: runs the tests, publishes self-contained ReadyToRun, trims unused locales,
   smoke-tests the result and writes a zip plus its SHA-256 under artifacts\.
@@ -27,7 +27,7 @@ function Run([string]$exe, [string[]]$arguments) {
 
 $version = ([xml](Get-Content $project -Raw)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
 if (-not $version) { throw 'No se encontró <Version> en el .csproj.' }
-Write-Host "My Own Browser $version ($Configuration, win-x64)"
+Write-Host "Flux Browser $version ($Configuration, win-x64)"
 
 if (-not $SkipTests) {
     Step 'Pruebas automáticas'
@@ -72,11 +72,11 @@ if (-not $SkipSmokeTest) {
         $env:MYOWNBROWSER_ENGINE = $engine
         $process = $null
         try {
-            $process = Start-Process (Join-Path $publish 'MyOwnBrowser.exe') -PassThru
+            $process = Start-Process (Join-Path $publish 'FluxBrowser.exe') -PassThru
             Start-Sleep -Seconds 12
             if ($process.HasExited) { throw "La aplicación se cerró durante el arranque con $engine (código $($process.ExitCode))." }
             $process.Refresh()
-            if ($process.MainWindowTitle -notlike '*My Own Browser*') { throw "No apareció la ventana principal con $engine (título: '$($process.MainWindowTitle)')." }
+            if ($process.MainWindowTitle -notlike '*Flux Browser*') { throw "No apareció la ventana principal con $engine (título: '$($process.MainWindowTitle)')." }
             $log = Join-Path $profile 'logs\app.log'
             if ((Test-Path $log) -and (Select-String -Path $log -Pattern '\[ERROR\]' -Quiet)) { throw "El registro contiene errores con ${engine}: $log" }
             $expected = if ($engine -eq 'webview2') { 'WebView2 \(con sandbox\)' } else { 'CEF \(sin sandbox\)' }
@@ -95,7 +95,7 @@ if (-not $SkipSmokeTest) {
 
 if (-not $SkipZip) {
     Step 'Empaquetando'
-    $zip = Join-Path $artifacts "MyOwnBrowser-$version-win-x64.zip"
+    $zip = Join-Path $artifacts "FluxBrowser-$version-win-x64.zip"
     if (Test-Path $zip) { Remove-Item $zip -Force }
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [IO.Compression.ZipFile]::CreateFromDirectory($publish, $zip, [IO.Compression.CompressionLevel]::Optimal, $true)

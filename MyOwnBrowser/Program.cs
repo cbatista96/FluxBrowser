@@ -73,9 +73,9 @@ internal static class Program
         }
         catch (Exception exception)
         {
-            AppLog.Error("No se pudo iniciar My Own Browser", exception);
-            MessageBox(IntPtr.Zero, $"No se pudo iniciar My Own Browser.\n\n{exception.Message}",
-                "My Own Browser", 0x10);
+            AppLog.Error("No se pudo iniciar Flux Browser", exception);
+            MessageBox(IntPtr.Zero, $"No se pudo iniciar Flux Browser.\n\n{exception.Message}",
+                "Flux Browser", 0x10);
             return 1;
         }
     }

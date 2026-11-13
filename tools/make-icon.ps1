@@ -1,6 +1,6 @@
-﻿<#
+<#
 .SYNOPSIS
-  Renders the My Own Browser icon (glass globe on a blue-violet tile) and packs it into a multi-size .ico plus a 512 px .png.
+  Renders the Flux Browser icon (glass globe on a blue-violet tile) and packs it into a multi-size .ico plus a 512 px .png.
 .EXAMPLE
   powershell -ExecutionPolicy Bypass -File tools\make-icon.ps1
 #>

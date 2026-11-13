@@ -1,4 +1,4 @@
-# Galería de My Own Browser 0.9.0
+# Galería de Flux Browser 0.9.0
 
 Capturas de la aplicación en Windows, a 1600 × 900, con un perfil de prueba.
 
@@ -6,7 +6,7 @@ Capturas de la aplicación en Windows, a 1600 × 900, con un perfil de prueba.
 
 ![Nueva pestaña](01-nueva-pestana.png)
 
-### Navegación web
+### Navegación en el sitio de World Marketing Labs
 
 ![Navegación web](02-navegacion.png)
 

@@ -24,10 +24,12 @@
     <Version>0.9.0</Version>
     <AssemblyVersion>0.9.0.0</AssemblyVersion>
     <FileVersion>0.9.0.0</FileVersion>
-    <Product>My Own Browser</Product>
-    <AssemblyTitle>My Own Browser</AssemblyTitle>
+    <Product>Flux Browser</Product>
+    <AssemblyName>FluxBrowser</AssemblyName>
+    <Company>World Marketing Labs</Company>
+    <AssemblyTitle>Flux Browser</AssemblyTitle>
     <Description>Navegador de escritorio con barras de cristal translúcido sobre Chromium (WinUI 3).</Description>
-    <Copyright>Copyright © 2026</Copyright>
+    <Copyright>Copyright © 2026 World Marketing Labs</Copyright>
     <NeutralLanguage>es</NeutralLanguage>
     <SatelliteResourceLanguages>en;es</SatelliteResourceLanguages>
   </PropertyGroup>

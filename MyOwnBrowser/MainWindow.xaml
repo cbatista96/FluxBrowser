@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:browser="using:MyOwnBrowser.Browser"
-    Title="My Own Browser">
+    Title="Flux Browser">
     <Grid x:Name="RootGrid" Background="Transparent" RequestedTheme="Default">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="SidebarColumn" Width="0" />

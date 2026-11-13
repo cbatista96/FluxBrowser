@@ -1,5 +1,5 @@
 name: Informar un fallo
-description: Describe un fallo reproducible en My Own Browser.
+description: Describe un fallo reproducible en Flux Browser.
 title: "[Fallo] "
 body:
   - type: input

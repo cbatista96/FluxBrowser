@@ -4,6 +4,8 @@
 
 ### Distribución
 
+- Primera publicación con el nombre **Flux Browser** y la identidad de World Marketing Labs. El menú de ayuda enlaza al sitio de la agencia y al registro de fallos.
+
 - Instalador EXE por usuario, ZIP portable y sumas SHA-256 para GitHub Releases.
 - Galería de la aplicación, política de privacidad, plantilla de incidencias y documentación de publicación.
 - Empaquetado MSIX x64 para Microsoft Store. La versión empaquetada utiliza WebView2 y recibe enlaces HTTP/HTTPS mediante activación de Windows.

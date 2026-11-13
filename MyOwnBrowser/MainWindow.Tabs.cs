@@ -288,7 +288,7 @@ public sealed partial class MainWindow
         if (ReloadIcon.Glyph != reloadGlyph) ReloadIcon.Glyph = reloadGlyph;
         SetLoadingIndicator(tab.IsLoading);
         ToolTipService.SetToolTip(ReloadButton, tab.IsLoading ? "Detener (Esc)" : "Actualizar (Ctrl+R)");
-        Title = $"{tab.Title} — My Own Browser" + (tab.IsPrivate ? (WebEngine.UseWebView2 ? " (privada)" : " (privada, sin sandbox)") : "");
+        Title = $"{tab.Title} — Flux Browser" + (tab.IsPrivate ? (WebEngine.UseWebView2 ? " (privada)" : " (privada, sin sandbox)") : "");
         VerticalWindowTitle.Text = tab.Title;
         ModeLabel.Text = tab.IsPrivate ? (WebEngine.UseWebView2 ? "PRIVADA" : "PRIVADA · SIN SANDBOX") : (WebEngine.UseWebView2 ? "VISTA PREVIA" : "LABORATORIO");
         TestScrollButton.Visibility = tab.Address == _testPage ? Visibility.Visible : Visibility.Collapsed;
