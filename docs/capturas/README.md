@@ -1,18 +1,18 @@
 # Galería de Flux Browser
 
-Capturas de la aplicación en Windows, a 1600 × 900, con un perfil de prueba.
+Capturas de Flux Browser en Windows con un perfil de prueba. Las vistas con pestañas verticales se tomaron con la ventana activa y centrada para mostrar el acrílico sobre el fondo del escritorio.
 
 ### Nueva pestaña
 
 ![Nueva pestaña](01-nueva-pestana.png)
 
-### Navegación en el sitio de World Marketing Labs
+### Navegación con barras translúcidas
 
-![Navegación web](02-navegacion.png)
+![El color del bloque burdeos se difumina al pasar por debajo de la barra superior](02-navegacion.png)
 
 ### Buscar dentro de la página
 
-![Buscar dentro de la página](03-busqueda.png)
+![Coincidencias resaltadas y recuadro burdeos visible a través de la barra superior](03-busqueda.png)
 
 ### Menú principal
 

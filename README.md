@@ -51,13 +51,13 @@ Screenshots show the current Spanish-language browser interface. The same views 
 
 <img src="docs/capturas/01-nueva-pestana.png" width="900" alt="New tab and quick links">
 
-### Web navigation
+### Translucent toolbar while scrolling
 
-<img src="docs/capturas/02-navegacion.png" width="900" alt="Web navigation">
+<img src="docs/capturas/02-navegacion.png" width="900" alt="A burgundy panel scrolls behind the translucent toolbar">
 
 ### Find in page
 
-<img src="docs/capturas/03-busqueda.png" width="900" alt="Find in page">
+<img src="docs/capturas/03-busqueda.png" width="900" alt="Find in page highlights with the burgundy panel visible through the toolbar">
 
 ### Main menu
 

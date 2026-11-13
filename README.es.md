@@ -51,13 +51,13 @@ Las capturas muestran la interfaz actual del navegador en español. La página e
 
 <img src="docs/capturas/01-nueva-pestana.png" width="900" alt="Nueva pestaña y vínculos rápidos">
 
-### Navegación web
+### Barra translúcida al desplazar la página
 
-<img src="docs/capturas/02-navegacion.png" width="900" alt="Navegación web">
+<img src="docs/capturas/02-navegacion.png" width="900" alt="Un recuadro burdeos se desplaza por debajo de la barra translúcida">
 
 ### Buscar en la página
 
-<img src="docs/capturas/03-busqueda.png" width="900" alt="Buscar en la página">
+<img src="docs/capturas/03-busqueda.png" width="900" alt="Coincidencias resaltadas y recuadro burdeos visible a través de la barra superior">
 
 ### Menú principal
 
